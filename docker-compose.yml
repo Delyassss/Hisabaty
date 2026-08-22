@@ -1,0 +1,24 @@
+version: '3.8'
+
+volumes:
+  db_data:
+
+networks:
+  hisabaty_network:
+    name: hisa_network
+    driver: bridge
+
+services:
+
+  db:
+    container_name: hisabaty_db
+    image: postgres:15-alpine
+    env_file:
+      - .env
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - hisabaty_network
+    restart: always
