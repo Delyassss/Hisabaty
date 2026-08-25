@@ -34,9 +34,10 @@ public class Student
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY) //
+    @ManyToOne(fetch = FetchType.LAZY) //fetch lazy is to not load the school when loading the student
     @JoinColumn(name = "school_id", nullable = false)
     private School school;
+    @NotBlank
     private String name;
     @Column(name = "email", unique = true, length = 100)
     private String email;

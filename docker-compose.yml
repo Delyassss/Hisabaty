@@ -22,3 +22,17 @@ services:
     networks:
       - hisabaty_network
     restart: always
+
+    nginx: 
+    image: nginx:latest
+    container_name: hisabaty_nginx
+    ports:
+      - ${NGINX_PORT}:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - hisabaty_network
+    restart: always
+    depends_on:
+      - app
+    
