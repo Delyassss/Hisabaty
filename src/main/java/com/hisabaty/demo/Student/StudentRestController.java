@@ -48,6 +48,11 @@ public class StudentRestController
                                                         @RequestParam(required = false) String cin,
                                                         @RequestParam(required = false) Status status,
                                                         @RequestParam(required = false) LocalDate examDate,
+                                                        @RequestParam(required = false) AttendanceStatus attendanceStatus,
+                                                        @RequestParam(required = false) LocalDate countdownDeadline,
+                                                        @RequestParam(required = false) LocalDate lastTrainingDate,
+                                                        @RequestParam(required = false) LocalDate nextTrainingDate,
+                                                        @RequestParam(required = false) Boolean registred,                                                     
                                                         @RequestParam Long schoolId,
                                                         @RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue =  "10") int size)
@@ -56,6 +61,16 @@ public class StudentRestController
             throw (new IllegalArgumentException("Invalid school id!"));
 
 
+    }
+
+    // When they click "Yes", your frontend code silently sends the POST request to /api/students/{id}/consume-practice
+    @PostMapping("/{studentId}/attendance")
+    public ResponseEntity<String> postAttendance(@PathVariable Long studentId)
+    {
+        if (studentId < 0)
+            throw new IllegalArgumentException("Invalid student id!"); 
+        studentService.AttendingCheck(studentId);
+        return ResponseEntity.status(HttpStatus.OK).body("Attendance recorded successfully.");
     }
 
 

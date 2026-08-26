@@ -28,9 +28,9 @@ public class StudentService
     {
         if (student == null || schoolId < 0)
             throw (new IllegalArgumentException("Invalid student or school id!"));
-        School school = schoolRepo.findById(schoolId).orElseThrow(() -> new RuntimeException("school not found"));
+        School school = schoolRepo.findById(schoolId).orElseThrow(() -> new RuntimeException("School not found !"));
         Optional<Student> newStudent = studentRepo.findByCin(student.getCin());
-        if (newStudent.isPresent())
+        if (newStudent.isPresent()) // isPresent is a method that checks if the optional is empty or not 
            throw (new IllegalArgumentException("Error: Student [Cin :  " + student.getCin() + " ] is already registered!"));
         newStudent.get().setName(student.getName());
         newStudent.get().setCin(student.getCin());
@@ -42,7 +42,7 @@ public class StudentService
             newStudent.get().setStatus(Status.THEORY_TRAINING);
 
         newStudent.get().setEmail(student.getEmail());
-        newStudent.get().setRemainingDays(school.getPracticeDays());
+        newStudent.get().setRemainingDaysPerWeek(school.getPracticeDaysPerWeek());
     return  studentRepo.save(newStudent.get());
     }
 
@@ -78,24 +78,26 @@ public class StudentService
 
 
 
-    // Days Schedule
+    // Days Schedule (this will run every Monday at 00:00 be)
+    // Run at 00:00:00, regardless of the date or month, as long as the day is a Monday.
     @Scheduled(cron = "0 0 0 * * MON")
     public void ResetDays()
     {
         List<Student> students = studentRepo.findAll();
         if (students.isEmpty())
             throw (new StudentNotFound());
-        students.forEach(one -> one.setRemainingDays(one.getSchool().getPracticeDays()));
+        students.forEach(one -> one.setRemainingDaysPerWeek(one.getSchool().getPracticeDaysPerWeek()));
         studentRepo.saveAll(students);
         System.out.println("Reset days success.");
     }
-    public void AttendingCheck()
+
+    public void AttendingCheck(Long studentId)
     {
-        List<Student> students = studentRepo.findAll();
-        if (students.isEmpty())
-            throw (new StudentNotFound());
-        students.forEach(one -> one.setRemainingDays(one.getRemainingDays() - 1));
-        studentRepo.saveAll(students);
+        Student student = studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFound());
+        if (student.getRemainingDaysPerWeek() <= 0)
+            throw (new StudentAttendaceLimitException(studentId));
+        student.setRemainingDaysPerWeek(student.getRemainingDaysPerWeek() - 1);
+        studentRepo.save(students);
         System.out.println("Attending check success.");
     }
 
