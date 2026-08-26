@@ -84,5 +84,15 @@ public class Student
 
     @Column(name = "attendance_status")
     private AttendanceStatus attendanceStatus = AttendanceStatus.ABSENT;
+
+
+    @Column(name = "already_passed_code")
+    private Boolean alreadyPassedCode = false;
+    @Column(name = "advance_payment")
+    Double advancePayment = 0.0;
+    @Column(name = "remaining_payment")
+    Double remainingPayment = 0.0;
+    @Column(name = "total_paid")
+    Double totalPaid = advancePayment + remainingPayment;
 }
 
