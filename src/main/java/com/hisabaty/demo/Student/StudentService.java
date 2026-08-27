@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import java.time.temporal.TemporalAdjusters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,18 +88,33 @@ public class StudentService
         if (students.isEmpty())
             throw (new StudentNotFound());
         students.forEach(one -> one.setRemainingDaysPerWeek(one.getSchool().getPracticeDaysPerWeek()));
+        students.forEach(one -> one.setAttendanceStatus(AttendanceStatus.ABSENT));
         studentRepo.saveAll(students);
         System.out.println("Reset days success.");
     }
+    
 
-    public void AttendingCheck(Long studentId)
+    public Boolean AttendingCheck(Long studentId, Boolean Attended)
     {
         Student student = studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFound());
         if (student.getRemainingDaysPerWeek() <= 0)
             throw (new StudentAttendaceLimitException(studentId));
-        student.setRemainingDaysPerWeek(student.getRemainingDaysPerWeek() - 1);
-        studentRepo.save(students);
-        System.out.println("Attending check success.");
+        if (Attended == true)
+        {
+            student.setRemainingDaysPerWeek(student.getRemainingDaysPerWeek() - 1); // for each day they attend we subtract one from the remaining days
+            student.setAttendanceStatus(AttendanceStatus.PRESENT);
+            student.setDaysAttended(student.getDaysAttended() + 1); // increase the number of days they attended (ALL TIME)
+            student.setLastTrainingDate(LocalDate.now());
+            System.out.println("Attending check success.");  
+        }
+        else
+        {
+            student.setAttendanceStatus(AttendanceStatus.ABSENT);
+            student.setNextTrainingDate(LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY)));
+            System.out.println("Attendance marked as absent.");
+        }
+        studentRepo.save(student);
+        return Attended;
     }
 
 

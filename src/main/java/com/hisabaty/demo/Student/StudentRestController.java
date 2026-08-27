@@ -64,13 +64,21 @@ public class StudentRestController
     }
 
     // When they click "Yes", your frontend code silently sends the POST request to /api/students/{id}/consume-practice
-    @PostMapping("/{studentId}/attendance")
+    @PostMapping("/{studentId}/attendance/true")
     public ResponseEntity<String> postAttendance(@PathVariable Long studentId)
     {
         if (studentId < 0)
             throw new IllegalArgumentException("Invalid student id!"); 
-        studentService.AttendingCheck(studentId);
+        studentService.AttendingCheck(studentId, true);
         return ResponseEntity.status(HttpStatus.OK).body("Attendance recorded successfully.");
+    }
+    @PostMapping("/{studentId}/attendance/false")
+    public ResponseEntity<String> postAbsence(@PathVariable Long studentId)
+    {
+        if (studentId < 0)
+            throw new IllegalArgumentException("Invalid student id!"); 
+        studentService.AttendingCheck(studentId, false);
+        return ResponseEntity.status(HttpStatus.OK).body("Attendance recorded as false.");
     }
 
 

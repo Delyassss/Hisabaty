@@ -81,13 +81,26 @@ public class Student
  
     // We can clean up the duplicate tracking dates to keep your DB organized
     private LocalDate countdownDeadline = LocalDate.now().plusMonths(6) ; // To track the strict 6-month NARSA window
+    @Scheduled  (cron = "0 0 0 * * *")
+    public void setCountdownDeadline(){
+        if (countdownDeadline.isBefore(LocalDate.now()))
+        {
+            status = Status.THEORY_TRAINING_COMPLETED;
+            RemainingDaysPerWeek = 0;
+        }
+    }
 
     @Column(name = "attendance_status")
     private AttendanceStatus attendanceStatus = AttendanceStatus.ABSENT;
-
-
+    
+    
+    @Column(name = "days_attended")
+    Integer daysAttended = 0;
+   
     @Column(name = "already_passed_code")
     private Boolean alreadyPassedCode = false;
+
+    //this is for future use
     @Column(name = "advance_payment")
     Double advancePayment = 0.0;
     @Column(name = "remaining_payment")
