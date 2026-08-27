@@ -59,10 +59,10 @@ public class Student
     @Pattern(regexp = "^[A-Z]{1,2}[0-9]{4,6}$", message = "Invalid Moroccan CIN format") // ^  → start of string // [0-9] → any digit (0 through 9) // {8} → exactly 8 times // $ → end of string
     private String cin;
     
-    @Column(name = "type_of_license")
-    @NotBlank(message = "Type of license is required")
-    String  typeOfLicense;
-    
+    @Column(name = "type_of_license" , nullable=false)
+    @Enumerated(EnumType.STRING)
+    LicenseType typeOfLicense;
+
     private Boolean registered = false;
     @PrePersist // we update this value only when the object is created (persisted)
     public void setRegistered(){

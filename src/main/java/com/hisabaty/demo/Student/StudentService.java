@@ -33,6 +33,11 @@ public class StudentService
         Optional<Student> newStudent = studentRepo.findByCin(student.getCin());
         if (newStudent.isPresent()) // isPresent is a method that checks if the optional is empty or not 
            throw (new IllegalArgumentException("Error: Student [Cin :  " + student.getCin() + " ] is already registered!"));
+
+        // check the type of license
+        if (!school.getLicenseAvailable().contains(student.getTypeOfLicense()))
+            throw (new IllegalArgumentException("Error: School does not offer this type of license!"));
+
         newStudent.get().setName(student.getName());
         newStudent.get().setCin(student.getCin());
         newStudent.get().setSchool(school);
@@ -41,7 +46,7 @@ public class StudentService
             newStudent.get().setStatus(Status.PRACTICAL_TRAINING);
         else
             newStudent.get().setStatus(Status.THEORY_TRAINING);
-
+        newStudent.get().setTypeOfLicense(student.getTypeOfLicense());
         newStudent.get().setEmail(student.getEmail());
         newStudent.get().setRemainingDaysPerWeek(school.getPracticeDaysPerWeek());
     return  studentRepo.save(newStudent.get());
