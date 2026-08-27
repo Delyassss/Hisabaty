@@ -92,6 +92,25 @@ public class StudentService
         studentRepo.saveAll(students);
         System.out.println("Reset days success.");
     }
+
+
+
+    
+    @Scheduled  (cron = "0 0 0 * * *")
+    public void setCountdownDeadline(){
+        List<Student> students = studentRepo.findAll();
+        if (students.isEmpty())
+            throw (new StudentNotFound());
+        students.forEach(one -> 
+        {
+            if (one.getCountdownDeadline().isBefore(LocalDate.now()))
+            {
+                one.setStatus(Status.THEORY_TRAINING_COMPLETED);
+                one.setRemainingDaysPerWeek(0);
+            }
+        });
+        studentRepo.saveAll(students);
+    }
     
 
     public Boolean AttendingCheck(Long studentId, Boolean Attended)
@@ -99,6 +118,9 @@ public class StudentService
         Student student = studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFound());
         if (student.getRemainingDaysPerWeek() <= 0)
             throw (new StudentAttendaceLimitException(studentId));
+
+        if (student.getStatus() != Status.THEORY_TRAINING || student.getStatus() != Status.PRACTICAL_TRAINING)
+            throw (new RuntimeException("Student is not in training"));         
         if (Attended == true)
         {
             student.setRemainingDaysPerWeek(student.getRemainingDaysPerWeek() - 1); // for each day they attend we subtract one from the remaining days

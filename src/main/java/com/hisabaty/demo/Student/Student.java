@@ -56,39 +56,35 @@ public class Student
     
     @Column(name = "cin", unique = true, nullable = false)
     @NotBlank(message = "CIN is required")
-    @Pattern(regexp = "^[A-Z]{1,2}[0-9]{4,6}$", message = "CIN must be 8 digits") // ^  → start of string // [0-9] → any digit (0 through 9) // {8} → exactly 8 times // $ → end of string
+    @Pattern(regexp = "^[A-Z]{1,2}[0-9]{4,6}$", message = "Invalid Moroccan CIN format") // ^  → start of string // [0-9] → any digit (0 through 9) // {8} → exactly 8 times // $ → end of string
     private String cin;
     
-    private Boolean registred = false;
+    private Boolean registered = false;
     @PrePersist // we update this value only when the object is created (persisted)
-    public void setRegisted(){
-        this.registred = true;
+    public void setRegistered(){
+        this.registered = true;
     }
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status = Status.THEORY_TRAINING;
 
-    private Integer RemainingDaysPerWeek ; // track days attendance per week
+    private Integer remainingDaysPerWeek ; // track days attendance per week
 
     // Modern Java Date types
     @CreatedDate // this annotation makes the time stamps to be set automatically when the object is created 
     @Column(updatable = false) // updatable=false means this value cannot be changed after it is created
-    final private LocalDateTime createdAt;
+     private LocalDateTime createdAt;
 
     private LocalDateTime lastTrainingDate;
     private LocalDateTime nextTrainingDate;
+
 
     private LocalDate examDate;
  
     // We can clean up the duplicate tracking dates to keep your DB organized
     private LocalDate countdownDeadline = LocalDate.now().plusMonths(6) ; // To track the strict 6-month NARSA window
-    @Scheduled  (cron = "0 0 0 * * *")
-    public void setCountdownDeadline(){
-        if (countdownDeadline.isBefore(LocalDate.now()))
-        {
-            status = Status.THEORY_TRAINING_COMPLETED;
-            RemainingDaysPerWeek = 0;
-        }
-    }
+    
 
     @Column(name = "attendance_status")
     private AttendanceStatus attendanceStatus = AttendanceStatus.ABSENT;
@@ -105,7 +101,10 @@ public class Student
     Double advancePayment = 0.0;
     @Column(name = "remaining_payment")
     Double remainingPayment = 0.0;
-    @Column(name = "total_paid")
-    Double totalPaid = advancePayment + remainingPayment;
+   public Double getTotalPaid()
+   {
+        return ((advancePayment != null) ? advancePayment : 0.0) + 
+               ((remainingPayment != null ) ? remainingPayment : 0.0);
+    }
 }
 

@@ -72,6 +72,7 @@ public class StudentRestController
         studentService.AttendingCheck(studentId, true);
         return ResponseEntity.status(HttpStatus.OK).body("Attendance recorded successfully.");
     }
+    // they click "No", your frontend code silently sends the POST request to /api/students/{id}/attendance/false
     @PostMapping("/{studentId}/attendance/false")
     public ResponseEntity<String> postAbsence(@PathVariable Long studentId)
     {
