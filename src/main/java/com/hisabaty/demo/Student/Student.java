@@ -59,6 +59,10 @@ public class Student
     @Pattern(regexp = "^[A-Z]{1,2}[0-9]{4,6}$", message = "Invalid Moroccan CIN format") // ^  → start of string // [0-9] → any digit (0 through 9) // {8} → exactly 8 times // $ → end of string
     private String cin;
     
+    @Column(name = "type_of_license")
+    @NotBlank(message = "Type of license is required")
+    String  typeOfLicense;
+    
     private Boolean registered = false;
     @PrePersist // we update this value only when the object is created (persisted)
     public void setRegistered(){
@@ -79,7 +83,7 @@ public class Student
     private LocalDateTime lastTrainingDate;
     private LocalDateTime nextTrainingDate;
 
-
+    @Column(nullable = true)
     private LocalDate examDate;
  
     // We can clean up the duplicate tracking dates to keep your DB organized

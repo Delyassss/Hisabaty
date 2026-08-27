@@ -21,6 +21,16 @@ import java.time.LocalDate;
  */
 @Getter
 @Setter
+
+public enum LicenseType
+{
+    A1 ,
+    A ,
+    B , 
+    C , 
+    D ,
+    E 
+}
 public class School
 {
     @Id
@@ -56,6 +66,11 @@ public class School
     @Min(value = 1, message = "Practice days must be at least 1")
     @Max(value = 7, message = "Practice days must be at most 7")
     private Integer practiceDaysPerWeek = 4 ; // default value is 4
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "license_available")
+    private List<LicenseType> licenseAvailable = new ArrayList<>();
     
 
 
