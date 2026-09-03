@@ -21,7 +21,7 @@ public class StudentRestController
 
 
     // CREATE
-    @PostMapping    
+    @PostMapping("add")
     public ResponseEntity<Student> addStudent(@Valid @RequestBody StudentDTO student,
                                               @RequestParam Long schoolID)
     {
@@ -29,7 +29,7 @@ public class StudentRestController
         return ResponseEntity.status(HttpStatus.CREATED).body(std);
     }
     // GET BY SCHOOL ID
-    @GetMapping
+    @GetMapping("get/by/school")
     public ResponseEntity<Page<StudentDTO>> getStudentsBySchool(@RequestParam Long schoolId,
                                                                 @RequestParam(defaultValue = "0") int page,
                                                                 @RequestParam(defaultValue = "10") int size)
