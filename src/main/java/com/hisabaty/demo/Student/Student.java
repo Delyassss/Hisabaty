@@ -52,6 +52,7 @@ public class Student
     private String email;
 
     @Column(name = "phone", length = 20)
+    @Pattern(regexp = "^[0-9]{8,15}$", message = "Invalid phone number format")
     private String phone;
     
     @Column(name = "cin", unique = true, nullable = false)
@@ -60,8 +61,7 @@ public class Student
     private String cin;
     
     @Column(name = "type_of_license" , nullable=false)
-    @Enumerated(EnumType.STRING)
-    LicenseType typeOfLicense;
+    private String typeOfLicense;
 
     private Boolean registered = false;
     @PrePersist // we update this value only when the object is created (persisted)
@@ -69,7 +69,7 @@ public class Student
         this.registered = true;
     }
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) // this will store the enum values as strings
     @Column(name = "status")
     private Status status = Status.THEORY_TRAINING;
 

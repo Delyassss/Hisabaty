@@ -68,11 +68,9 @@ public class School
     private Integer practiceDaysPerWeek = 4 ; // default value is 4
 
 
-    @ElementCollection(targetClass = LicenseType.class, fetch = FetchType.EAGER) // fetch= FetchType.EAGER means that the list will be loaded eagerly (all at once) when the school is loaded
-    @CollectionTable(name = "school_license_available", joinColumns = @JoinColumn(name = "school_id")) // this is a join table that will store the list of licenses
-    @Enumerated(EnumType.STRING) // this will store the licenses as strings
     @Column(name = "license_type") // this is the name of the column that will store the licenses
-    private List<LicenseType> licenseAvailable = new ArrayList<>();
+    private List<String> licenseAvailable;
+    
     
 
 

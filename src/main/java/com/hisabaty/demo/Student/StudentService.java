@@ -46,7 +46,11 @@ public class StudentService
             newStudent.get().setStatus(Status.PRACTICAL_TRAINING);
         else
             newStudent.get().setStatus(Status.THEORY_TRAINING);
-        newStudent.get().setTypeOfLicense(student.getTypeOfLicense());
+
+        if (!school.getLicenseAvailable().contains(student.getTypeOfLicense()))
+            throw (new RuntimeException("Error: School does not offer this type of license!"));
+        else
+            newStudent.get().setTypeOfLicense(student.getTypeOfLicense());
         newStudent.get().setEmail(student.getEmail());
         newStudent.get().setRemainingDaysPerWeek(school.getPracticeDaysPerWeek());
     return  studentRepo.save(newStudent.get());
@@ -58,6 +62,13 @@ public class StudentService
             throw (new IllegalArgumentException("Invalid school id!"));
         // Spring Data JPA automatically writes the SELECT * FROM students WHERE school_id = ?
         return studentRepo.findBySchoolId(schoolId, pageable);
+    }
+    public Student_Response_DTO getStudentById(Long id, Pageable pageable) 
+    {
+        if (id < 0)
+            throw (new IllegalArgumentException("Invalid student id!"));
+        Student student = studentRepo.findById(id).orElseThrow(() -> new StudentNotFound());
+        return convertToStudentResponseDTO(student);
     }
 
 
@@ -104,8 +115,10 @@ public class StudentService
     @Scheduled  (cron = "0 0 0 * * *")
     public void setCountdownDeadline(){
         List<Student> students = studentRepo.findAll();
+
         if (students.isEmpty())
             throw (new StudentNotFound());
+
         students.forEach(one -> 
         {
             if (one.getCountdownDeadline().isBefore(LocalDate.now()))
@@ -113,6 +126,7 @@ public class StudentService
                 one.setStatus(Status.THEORY_TRAINING_COMPLETED);
                 one.setRemainingDaysPerWeek(0);
             }
+            one.setAttendanceStatus(AttendanceStatus.ABSENT); // set attendance status to absent every day 
         });
         studentRepo.saveAll(students);
     }
@@ -121,15 +135,16 @@ public class StudentService
     public Boolean AttendingCheck(Long studentId, Boolean Attended)
     {
         Student student = studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFound());
+
         if (student.getRemainingDaysPerWeek() <= 0)
             throw (new StudentAttendaceLimitException(studentId));
 
-        if (student.getStatus() != Status.THEORY_TRAINING || student.getStatus() != Status.PRACTICAL_TRAINING)
+        if (student.getStatus() != Status.THEORY_TRAINING && student.getStatus() != Status.PRACTICAL_TRAINING)
             throw (new RuntimeException("Student is not in training"));         
         if (Attended == true)
         {
             student.setRemainingDaysPerWeek(student.getRemainingDaysPerWeek() - 1); // for each day they attend we subtract one from the remaining days
-            student.setAttendanceStatus(AttendanceStatus.PRESENT);
+            student.setAttendanceStatus(AttendanceStatus.PRESENT); // set attendance status to present and i need to set back after couple of hours 
             student.setDaysAttended(student.getDaysAttended() + 1); // increase the number of days they attended (ALL TIME)
             student.setLastTrainingDate(LocalDate.now());
             System.out.println("Attending check success.");  
@@ -147,19 +162,48 @@ public class StudentService
 
 
     // Convert Utils
-    public StudentDTO convertToDTO(Student student)
+    public Student_Request_DTO convertToStudentRequestDTO(Student student)
     {
-        StudentDTO std = new StudentDTO();
+        Student_Request_DTO std = new Student_Request_DTO();
         std.setName(student.getName());
         std.setCin(student.getCin());
         std.setEmail(student.getEmail());
         std.setPhone(student.getPhone());
+        std.setAdvancePayment(student.getAdvancePayment());
+        std.setRemainingPayment(student.getRemainingPayment());
+        std.setTypeOfLicense(student.getTypeOfLicense());
+        std.setAlreadyPassedCode(student.getAlreadyPassedCode());
+        std.setSchoolId(student.getSchool().getId());
         return std;
     }
-    public Page<StudentDTO> ToDTO(Page<Student> student)
+    public Page<Student_Request_DTO> ToStudentRequestDTO(Page<Student> student)
     {
-        Page<StudentDTO> std ;
-        std = student.map(s -> convertToDTO(s));
+        Page<Student_Request_DTO> std ;
+        std = student.map(s -> convertToStudentRequestDTO(s));
         return std;
     }
+
+
+
+    public Student_Response_DTO convertToStudentResponseDTO(Student student)
+    {
+        Student_Response_DTO std = new Student_Response_DTO();
+        std.setName(student.getName());
+        std.setCin(student.getCin());
+        std.setEmail(student.getEmail());
+        std.setPhone(student.getPhone());
+        std.setAdvancePayment(student.getAdvancePayment());
+        std.setRemainingPayment(student.getRemainingPayment());
+        std.setTypeOfLicense(student.getTypeOfLicense());
+        std.setAlreadyPassedCode(student.getAlreadyPassedCode());
+        std.setSchoolId(student.getSchool().getId());
+        return std;
+    }
+    public Page<Student_Response_DTO> ToStudentResponseDTO(Page<Student> student)
+    {
+        Page<Student_Response_DTO> std ;
+        std = student.map(s -> convertToStudentResponseDTO(s));
+        return std;
+    }
+
 }
