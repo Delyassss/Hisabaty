@@ -28,6 +28,7 @@ public class StudentRestController
         Student std = studentService.createStudent(student, schoolID);
         return ResponseEntity.status(HttpStatus.CREATED).body(studentService.convertToStudentRequestDTO(std));
     }
+
     // GET BY SCHOOL ID
     @GetMapping("/school/{schoolId}")
     public ResponseEntity<Page<Student_Response_DTO>> getStudentsBySchool(@PathVariable Long schoolId,
@@ -56,22 +57,17 @@ public class StudentRestController
 
     // GET ALL STUDENTS
     @GetMapping
-    public ResponseEntity<Page<StudentDTO>> getStudents(@RequestParam(required = false) String email,
-                                                        @RequestParam(required = false) String phone,
-                                                        @RequestParam(required = false) String cin,
-                                                        @RequestParam(required = false) Status status,
-                                                        @RequestParam(required = false) LocalDate examDate,
-                                                        @RequestParam(required = false) AttendanceStatus attendanceStatus,
-                                                        @RequestParam(required = false) LocalDate countdownDeadline,
-                                                        @RequestParam(required = false) LocalDate lastTrainingDate,
-                                                        @RequestParam(required = false) LocalDate nextTrainingDate,
-                                                        @RequestParam(required = false) Boolean registred,                                                     
-                                                        @RequestParam Long schoolId,
+    public ResponseEntity<Page<Student_Response_DTO>> getStudents(@ModelAttribute StudentSearchCriteria criteria, 
                                                         @RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue =  "10") int size)
     {
-        if (schoolId < 0)
+        if ( criteria.getSchoolId() < 0  || criteria.getid() < 0)
             throw (new IllegalArgumentException("Invalid school id!"));
+        
+
+        
+        
+
 
 
     }

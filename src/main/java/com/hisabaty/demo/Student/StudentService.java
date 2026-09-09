@@ -56,13 +56,30 @@ public class StudentService
     return  studentRepo.save(newStudent.get());
     }
 
-    public Page<Student> getStudentsBySchool(Long schoolId, Pageable pageable)
+
+
+
+
+
+
+
+
+
+    public Page<Student_Response_DTO> getStudentsBySchool(Long schoolId, Pageable pageable)
     {
         if (schoolId < 0)
             throw (new IllegalArgumentException("Invalid school id!"));
         // Spring Data JPA automatically writes the SELECT * FROM students WHERE school_id = ?
         return studentRepo.findBySchoolId(schoolId, pageable);
     }
+
+
+
+
+
+
+
+
     public Student_Response_DTO getStudentById(Long id, Pageable pageable) 
     {
         if (id < 0)
@@ -72,6 +89,12 @@ public class StudentService
     }
 
 
+    public Page<Student_Response_DTO> getStudentDynamically(StudentSearchCriteria criteria , Pageable pg)
+    {
+        if (criteria == null) throw (new IllegalArgumentException("Invalid student search criteria!"));
+        return 
+        
+    }
 
 
 
