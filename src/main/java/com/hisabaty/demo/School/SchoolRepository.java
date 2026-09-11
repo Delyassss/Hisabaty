@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 public interface SchoolRepository extends JpaRepository<School, Long>
 {
     // JpaRepository gives you built-in methods like .save(), .findAll(), and .findById()
+
+    Optional<School> findByCin(String cin);
 }

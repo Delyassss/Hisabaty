@@ -70,6 +70,14 @@ public class School
 
     @Column(name = "license_type") // this is the name of the column that will store the licenses
     private List<String> licenseAvailable;
+
+    @Column(name = "student_count")
+    private Long studentCount = 0;
+    
+    Long  studentIndex = -1;
+    String  studentCinPrefix;
+    
+    
     
     
 
