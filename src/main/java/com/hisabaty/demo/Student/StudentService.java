@@ -3,7 +3,7 @@ package com.hisabaty.demo.Student;
 import ch.qos.logback.core.joran.conditional.ElseAction;
 import com.hisabaty.demo.School.School;
 import com.hisabaty.demo.School.SchoolRepository;
-import com.hisabaty.demo.Student.StudentDTO;
+import com.hisabaty.demo.Student.Student_Request_DTO;
 import com.hisabaty.demo.Student.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,7 +25,7 @@ public class StudentService
     private final SchoolRepository schoolRepo;
 
     // CREATE
-    public Student createStudent(StudentDTO student, Long schoolId)
+    public Student createStudent(Student_Request_DTO student, Long schoolId)
     {
         if (student == null || schoolId < 0)
             throw (new IllegalArgumentException("Invalid student or school id!"));

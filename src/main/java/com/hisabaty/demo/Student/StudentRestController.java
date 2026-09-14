@@ -21,8 +21,8 @@ public class StudentRestController
 
 
     // CREATE
-    @PostMapping
-    public ResponseEntity<Student_Response_DTO> addStudent(@Valid @RequestBody StudentDTO student,
+    @PostMapping("/add-student")
+    public ResponseEntity<Student_Response_DTO> addStudent(@Valid @RequestBody Student_Request_DTO student,
                                               @RequestParam Long schoolID)
     {
         Student std = studentService.createStudent(student, schoolID);
@@ -57,12 +57,17 @@ public class StudentRestController
 
     // GET ALL STUDENTS
     @GetMapping
-    public ResponseEntity<Page<Student_Response_DTO>> getStudents(@ModelAttribute StudentSearchCriteria criteria, 
+    public ResponseEntity<Page<Student_Response_DTO>> getStudents(@RequestBody Student_Request_DTO request, 
                                                         @RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue =  "10") int size)
     {
-        if ( criteria.getSchoolId() < 0  || criteria.getid() < 0)
+        if (request.getSchoolId() < 0)
             throw (new IllegalArgumentException("Invalid school id!"));
+
+        if ()
+
+        
+        
         
 
         

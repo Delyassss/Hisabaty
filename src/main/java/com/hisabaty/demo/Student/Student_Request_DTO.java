@@ -8,8 +8,10 @@ import jakarta.validation.constraints.NotNull;
 
 
 @Data
-public class StudentDTO
+public class Student_Request_DTO
 {
+
+
     @NotNull(message = "School ID is required")
     private Long schoolId; // SaaS Rule: Always know which tenant this belongs to!
     
@@ -32,8 +34,22 @@ public class StudentDTO
     @NotNull(message = "Already passed code is required")
     private Boolean alreadyPassedCode;
 
-    private Double advancePayment;
-    private Double remainingPayment;
+    private Double advancePayment = 0.0;
+    private Double remainingPayment = 0.0;
 
-    
+    private Status status = null;
+
+    private AttendanceStatus attendanceStatus = null;
+
+    private LocalDate createdAt =  null;
+    private LocalDate examDate = null;
+    private LocalDate lastTrainingDate = null;
+    private LocalDate nextTrainingDate = null;
+    private LocalDate countdownDeadline = null;
+    private Boolean registred = null;
+    private Double totalPaid = 0.0;
+    private Integer remainingDaysPerWeek = null;
+    private Integer daysAttended = null;
+
+
 }
