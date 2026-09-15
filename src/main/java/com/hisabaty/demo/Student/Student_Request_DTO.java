@@ -22,13 +22,15 @@ public class Student_Request_DTO
     @Pattern(regexp = "^[A-Z]{1,2}[0-9]{4,6}$", message = "Invalid Moroccan CIN format")
     private String cin;
 
+    @NotBlank(message = "Phone is required")
     @Pattern(regexp = "^[0-9]{8,15}$", message = "Invalid phone number format")
     private String phone;
     
+    @NotBlank(message = "Email is required")
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Invalid email format")
     private String email;
     
-    @NotNull(message = "Type of license is required")
+    @NotBlank(message = "Type of license is required")
     private String typeOfLicense;
     
     @NotNull(message = "Already passed code is required")

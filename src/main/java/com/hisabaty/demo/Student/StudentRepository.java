@@ -11,7 +11,9 @@ import java.util.Optional;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> , JpaSpecificationExecutor<Student> 
 {
+    
     // Spring Boot automatically builds the SQL query for this!
     Page<Student> findBySchoolId(Long schoolId, Pageable pageable);
     Optional<Student> findByCin(String cin);
+
 }

@@ -45,12 +45,14 @@ public class Student
     @JoinColumn(name = "school_id", nullable = false)
     private School school;
 
-    @NotBlank
+    @NotBlank(message = "Name is required")
     private String name;
 
     @Column(name = "email", unique = true, length = 100)
+    @NotBlank(message = "Email is required")
     private String email;
 
+    @NotBlank(message = "Phone is required")
     @Column(name = "phone", length = 20)
     @Pattern(regexp = "^[0-9]{8,15}$", message = "Invalid phone number format")
     private String phone;
@@ -61,6 +63,7 @@ public class Student
     private String cin;
     
     @Column(name = "type_of_license" , nullable=false)
+    @NotBlank(message = "Type of license is required")
     private String typeOfLicense;
 
     private Boolean registered = false;
