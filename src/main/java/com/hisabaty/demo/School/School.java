@@ -37,6 +37,9 @@ public class School
     @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
+    @OneToMany(mappedBy = "school")
+    private List<Student> students;
+
     @Column(nullable = false, required = true)
     @NotBlank(message = "Name is required")
         private String name;

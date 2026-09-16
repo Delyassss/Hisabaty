@@ -42,7 +42,7 @@ public class Student
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY) //fetch lazy is to not load the school when loading the student
-    @JoinColumn(name = "school_id", nullable = false)
+    @JoinColumn(name = "school_entity", nullable = false)
     private School school;
 
     @NotBlank(message = "Name is required")
