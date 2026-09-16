@@ -37,7 +37,7 @@ public class School
     @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-    @OneToMany(mappedBy = "school")
+    @OneToMany(mappedBy = "school") // the mappedBy basically to point to the student 
     private List<Student> students;
 
     @Column(nullable = false, required = true)

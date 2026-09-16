@@ -89,10 +89,13 @@ public class StudentService
     }
 
 
-    public Page<Student_Response_DTO> getStudentDynamically(StudentSearchCriteria criteria , Pageable pg)
+    public Page<Student_Response_DTO> getStudentDynamically(Student_Request_DTO req , Pageable pg)
     {
-        if (criteria == null) throw (new IllegalArgumentException("Invalid student search criteria!"));
-        return 
+        if (req == null) throw (new IllegalArgumentException("Invalid student search criteria!"));
+        
+        Specification<Student> spec = StudentSpecification.searchStudent(req);
+
+        return studentRepo.findAll(spec, pg).map(this::convertToStudentResponseDTO); // this is just a shortcut for one -> this->convert..
         
     }
 

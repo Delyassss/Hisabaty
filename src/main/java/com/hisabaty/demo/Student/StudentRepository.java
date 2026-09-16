@@ -15,5 +15,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> , JpaSpe
     // Spring Boot automatically builds the SQL query for this!
     Page<Student> findBySchoolId(Long schoolId, Pageable pageable);
     Optional<Student> findByCin(String cin);
+    Page<Student> findAll(Specification<student> spec , Pageable pg);
 
 }

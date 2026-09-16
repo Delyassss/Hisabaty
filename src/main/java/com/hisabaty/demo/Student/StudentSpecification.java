@@ -15,12 +15,45 @@ public static Specification<Student> searchStudent(Student_Request_DTO request)
             rules.add(reqbuilder.equal(root.get("school_entity").get("id"), request.getSchoolId()));
         if (request.getName() != null)
             rules.add(reqbuilder.equal(root.get("name"), request.getName()));
-        if (request.)
+        if (request.getCin() != null)
+            rules.add(reqbuilder.equal(root.get("cin"), request.getCin()));
+        if (request.getPhone() != null)
+            rules.add(reqbuilder.equal(root.get("phone"), request.getPhone()));
+        if (request.getEmail() != null)
+            rules.add(reqbuilder.equal(root.get("email"), request.getEmail()));
+        if (request.getTypeOfLicense() != null)
+            rules.add(reqbuilder.equal(root.get("typeOfLicense"), request.getTypeOfLicense()));
+        if (request.getRemainingPayment() != null && request.getAdvancePayment() != null)
+            rules.add(reqbuilder.equal(root.get("remainingPayment"), request.getRemainingPayment()));
+        if (request.getAdvancePayment() != null && request.getRemainingPayment() != null)
+            rules.add(reqbuilder.equal(root.get("advancePayment"), request.getAdvancePayment()));
+        if (request.getAlredyPassedCode() != null)
+            rules.add(reqbuilder.equal(root.get("alreadyPassedCode"), request.getAlredyPassedCode()));
+        if (request.getCreatedAt() != null)
+            rules.add(reqbuilder.equal(root.get("createdAt"), request.getCreatedAt()));
+        if (request.getExamDate() != null)
+            rules.add(reqbuilder.equal(root.get("examDate"), request.getExamDate()));
+        if (request.getLastTrainingDate() != null)
+            rules.add(reqbuilder.equal(root.get("lastTrainingDate"), request.getLastTrainingDate()));
+        if (request.getNextTrainingDate() != null)
+            rules.add(reqbuilder.equal(root.get("nextTrainingDate"), request.getNextTrainingDate()));
+        if (request.getCountdownDeadline() != null)
+            rules.add(reqbuilder.equal(root.get("countdownDeadline"), request.getCountdownDeadline()));
+        if (request.getRegistred() != null)
+            rules.add(reqbuilder.equal(root.get("registered"), request.getRegistred()));
+        if (request.getTotalPaid() != null)
+            rules.add(reqbuilder.equal(root.get("totalPaid"), request.getTotalPaid()));
+        if (request.getRemainingDaysPerWeek() != null)
+            rules.add(reqbuilder.equal(root.get("remainingDaysPerWeek"), request.getRemainingDaysPerWeek()));
+        if (request.getDaysAttended() != null)
+            rules.add(reqbuilder.equal(root.get("daysAttended"), request.getDaysAttended()));
+        if (request.getAttendanceStatus() != null)
+            rules.add(reqbuilder.equal(root.get("attendanceStatus"), request.getAttendanceStatus()));
+        if (request.getStatus() != null)
+            rules.add(reqbuilder.equal(root.get("status"), request.getStatus())); 
         
-
-
-
-
+        return reqbuilder.and(rules.toArray(new Predicate[0])); // why 0 because if size of 0 wont fit anything so it a trick to force java to rebuild the srrsy with the exact size
     }
-}    
+
 }
+}   

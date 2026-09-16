@@ -64,16 +64,10 @@ public class StudentRestController
         if (request.getSchoolId() < 0)
             throw (new IllegalArgumentException("Invalid school id!"));
 
-        if ()
-
-        
-        
-        
-
-        
-        
-
-
+        Page<Student_Response_DTO>  stds = studentService.getStudentDynamically(request, getpages(page, size));
+        if (stds.isEmpty())
+            throw new StudentNotFound();
+        return ResponseEntity.ok(stds);
 
     }
 
