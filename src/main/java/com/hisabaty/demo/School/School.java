@@ -21,6 +21,8 @@ import java.time.LocalDate;
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 
 public enum LicenseType
 {

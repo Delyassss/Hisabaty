@@ -54,7 +54,8 @@ public class Student
 
     @NotBlank(message = "Phone is required")
     @Column(name = "phone", length = 20)
-    @Pattern(regexp = "^[0-9]{8,15}$", message = "Invalid phone number format")
+    @Pattern(rege
+xp = "^[0-9]{8,15}$", message = "Invalid phone number format")
     private String phone;
     
     @Column(name = "cin", unique = true, nullable = false)

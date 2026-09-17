@@ -57,7 +57,7 @@ public class StudentRestController
 
     // GET ALL STUDENTS
     @GetMapping
-    public ResponseEntity<Page<Student_Response_DTO>> getStudents(@RequestBody Student_Request_DTO request, 
+    public ResponseEntity<Page<Student_Response_DTO>> getStudentsByfilter(@RequestBody Student_Request_DTO request, 
                                                         @RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue =  "10") int size)
     {
