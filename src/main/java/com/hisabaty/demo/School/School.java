@@ -40,7 +40,7 @@ public class School
         private Long id;
 
     @OneToMany(mappedBy = "school") // the mappedBy basically to point to the student 
-    private List<Student> students;
+    private List<Student> students; // the OneToMany use fetch LAZY by default
 
     @Column(nullable = false, required = true)
     @NotBlank(message = "Name is required")
