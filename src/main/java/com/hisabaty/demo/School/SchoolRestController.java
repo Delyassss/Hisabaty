@@ -37,7 +37,7 @@ public class SchoolRestController
     }
 
 
-    @GetMapping("/spec")
+    @GetMapping("/students/filter")
     public ResponseEntity<Page<Student_Response_DTO>> getStudentsByFilter(Student_Request_DTO request , Pageable pg)
     {
         Page<Student_Response_DTO> stds = schoolService.getStudentByfilter(request, pg);

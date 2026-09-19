@@ -2,6 +2,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 import java.util.ArrayList;
 import jakarta.persistence.criteria.Predicate;
+import org.springframework.util.StringUtils
 
 public class StudentSpecification {
 
@@ -13,15 +14,15 @@ public static Specification<Student> searchStudent(Student_Request_DTO request)
 
         if (request.getSchoolId() != null)
             rules.add(reqbuilder.equal(root.get("school_entity").get("id"), request.getSchoolId()));
-        if (request.getName() != null)
-            rules.add(reqbuilder.equal(root.get("name"), request.getName()));
-        if (request.getCin() != null)
-            rules.add(reqbuilder.equal(root.get("cin"), request.getCin()));
-        if (request.getPhone() != null)
+        if (request.getName() != null || !StringUtils.hasText(request.getName()))
+            rules.add(reqbuilder.like(reqbuilder.lower(root.get("name")), reqbuilder.lower(request.getName() + '%')));
+        if (request.getCin() != null || !StringUtils.hasText(request.getCin()))
+            rules.add(reqbuilder.like(reqbuilder.lower(root.get("cin")), reqbuilder.lower(request.getCin() + '%')));
+        if (request.getPhone() != null || !StringUtils.hasText(request.getPhone()))
             rules.add(reqbuilder.equal(root.get("phone"), request.getPhone()));
-        if (request.getEmail() != null)
-            rules.add(reqbuilder.equal(root.get("email"), request.getEmail()));
-        if (request.getTypeOfLicense() != null)
+        if (request.getEmail() != null || !StringUtils.hasText(request.getEmail()))
+            rules.add(reqbuilder.like(reqbuilder.lower(root.get("email")), reqbuilder.lower(request.getEmail() + '%')));
+        if (request.getTypeOfLicense() != null || !StringUtils.hasText(request.getTypeOfLicense()))
             rules.add(reqbuilder.equal(root.get("typeOfLicense"), request.getTypeOfLicense()));
         if (request.getRemainingPayment() != null && request.getAdvancePayment() != null)
             rules.add(reqbuilder.equal(root.get("remainingPayment"), request.getRemainingPayment()));

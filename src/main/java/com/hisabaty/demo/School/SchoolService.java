@@ -10,6 +10,7 @@ import com.hisabaty.demo.Student.*;
 public class SchoolService
 {
     private final SchoolRepository schoolRepository;
+    private final StudentRepository studentRepo;
 
 
     Page<Student_Response_DTO>  getStudent(Pageable pg)
@@ -25,6 +26,8 @@ public class SchoolService
 
     Page<Student_Response_DTO> getStudentsByFilter(Student_Request_DTO request, Pageable pg)
     {
+        Long id = getSchoolId();
+        request.setSchoolId(id);
         Specification spec = StudentSpecification.searchStudent(request);
         return schoolRepository.findAll(spec, pg).map(this->convertToStudentResponseDTO).orElseThrow(()-> new StudentNotFound());
     }
