@@ -1,5 +1,7 @@
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.hisabaty.demo.Student.Exceptions.StudentNotFound;
+import com.hisabaty.demo.Student.*;
 
 
 
@@ -15,6 +17,16 @@ public class SchoolService
         return ToStudentResponseDTO(schoolRepository.findAll(pg));
     }
 
-    
+
+    Student_Response_DTO getStudentById(Long id)
+    {
+        return schoolRepository.findByStudentId(id).map(this->convertToStudentResponseDTO).orElseThrow(()-> new StudentNotFound());
+    }
+
+    Page<Student_Response_DTO> getStudentsByFilter(Student_Request_DTO request, Pageable pg)
+    {
+        Specification spec = StudentSpecification.searchStudent(request);
+        return schoolRepository.findAll(spec, pg).map(this->convertToStudentResponseDTO).orElseThrow(()-> new StudentNotFound());
+    }
 
 }
