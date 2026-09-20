@@ -1,12 +1,21 @@
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-package com.hisabaty.demo.Student;
 
+import com.hisabaty.demo.School.School;
 
+import lombok.RequiredArgsConstructor;
+
+import com.hisabaty.demo.Student.*;
+import com.hisabaty.demo.School.*;
 
 
 
 @RestController
 @RequestMapping("/v1/school")
+@RequiredArgsConstructor
 public class SchoolRestController
 {
 
@@ -40,7 +49,7 @@ public class SchoolRestController
     @GetMapping("/students/filter")
     public ResponseEntity<Page<Student_Response_DTO>> getStudentsByFilter(Student_Request_DTO request , Pageable pg)
     {
-        Page<Student_Response_DTO> stds = schoolService.getStudentByfilter(request, pg);
+        Page<Student_Response_DTO> stds = schoolService.getStudentsByFilter(request, pg);
         if (stds == null || stds.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No students found with the given filter");
         

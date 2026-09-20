@@ -1,6 +1,14 @@
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
-import com.hisabaty.demo.Student.Exceptions.StudentNotFound;
+
+import com.hisabaty.demo.School.SchoolRepository;
 import com.hisabaty.demo.Student.*;
 
 
@@ -15,19 +23,19 @@ public class SchoolService
 
     Page<Student_Response_DTO>  getStudent(Pageable pg)
     {
-        return ToStudentResponseDTO(studentRepo.findAll(pg));
+        return ToStudent_Response_DTO(studentRepo.findAll(pg));
     }
 
 
     Student_Response_DTO getStudentById(Long id)
     {
-        Student std = studentRepo.findById(id);
+        Optional<Student> std = studentRepo.findById(id);
         if (std == null  || std.isEmpty())
             return null;
-        if (std.getSchool().getId() != getSchoolId())
+        if (std.get().getSchool().getId() != getSchoolId())
             return null;
 
-        return schoolRepository.findByStudentId(id).map(this::convertToStudentResponseDTO);
+        return studentRepo.findById(id).map(this::convertToStudentResponseDTO);
     }
 
     Page<Student_Response_DTO> getStudentsByFilter(Student_Request_DTO request, Pageable pg)
@@ -35,12 +43,12 @@ public class SchoolService
         Long id = getSchoolId();
         request.setSchoolId(id);
         Specification spec = StudentSpecification.searchStudent(request);
-        return schoolRepository.findAll(spec, pg).map(this->convertToStudentResponseDTO);
+        return schoolRepository.findAll(spec, pg).map(this::convertToStudentResponseDTO);
     }
 
-    public Page<School> getAllSchools(Pageable pg)
+    public Page<School_Response_DTO> getAllSchools(Pageable pg)
     {
-        return schoolRepository.FindAllSchools(pg);
+        return schoolRepository.FindAllSchools(pg).map(this::ToSchoolResponseDTO);
     }
 
 

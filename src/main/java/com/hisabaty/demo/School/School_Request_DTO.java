@@ -1,5 +1,8 @@
 package com.hisabaty.demo.School;
 
+import java.util.List;
+
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
@@ -34,6 +37,4 @@ public class School_Request_DTO
 
     private Long studentCount;
     private String studentCinPrefix;
-
-
 }
