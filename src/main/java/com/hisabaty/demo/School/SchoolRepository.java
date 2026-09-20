@@ -9,4 +9,6 @@ public interface SchoolRepository extends JpaRepository<School, Long>
     // JpaRepository gives you built-in methods like .save(), .findAll(), and .findById()
 
     Optional<School> findByCin(String cin);
+    @Query("SELECT s FROM School s LEFT JOIN ON Student std  WHERE std.school.id = s.id")
+    Page<School> FindAllSchools();
 }

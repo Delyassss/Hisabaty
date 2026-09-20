@@ -72,14 +72,7 @@ public class StudentService
         // Spring Data JPA automatically writes the SELECT * FROM students WHERE school_id = ?
         return studentRepo.findBySchoolId(schoolId, pageable);
     }
-
-
-
-
-
-
-
-
+    
     public Student_Response_DTO getStudentById(Long id, Pageable pageable) 
     {
         if (id < 0)
@@ -190,6 +183,8 @@ public class StudentService
     // Convert Utils
     public Student_Request_DTO convertToStudentRequestDTO(Student student)
     {
+        if (student == null)
+            return null;
         Student_Request_DTO std = new Student_Request_DTO();
         std.setName(student.getName());
         std.setCin(student.getCin());
@@ -204,6 +199,8 @@ public class StudentService
     }
     public Page<Student_Request_DTO> ToStudentRequestDTO(Page<Student> student)
     {
+         if (student == null)
+            return null;
         Page<Student_Request_DTO> std ;
         std = student.map(s -> convertToStudentRequestDTO(s));
         return std;
@@ -213,6 +210,8 @@ public class StudentService
 
     public Student_Response_DTO convertToStudentResponseDTO(Student student)
     {
+         if (student == null)
+            return null;
         Student_Response_DTO std = new Student_Response_DTO();
         std.setName(student.getName());
         std.setCin(student.getCin());
@@ -227,6 +226,8 @@ public class StudentService
     }
     public Page<Student_Response_DTO> ToStudentResponseDTO(Page<Student> student)
     {
+         if (student == null)
+            return null;
         Page<Student_Response_DTO> std ;
         std = student.map(s -> convertToStudentResponseDTO(s));
         return std;

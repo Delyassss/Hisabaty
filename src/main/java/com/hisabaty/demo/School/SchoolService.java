@@ -15,13 +15,19 @@ public class SchoolService
 
     Page<Student_Response_DTO>  getStudent(Pageable pg)
     {
-        return ToStudentResponseDTO(schoolRepository.findAll(pg));
+        return ToStudentResponseDTO(studentRepo.findAll(pg));
     }
 
 
     Student_Response_DTO getStudentById(Long id)
     {
-        return schoolRepository.findByStudentId(id).map(this->convertToStudentResponseDTO).orElseThrow(()-> new StudentNotFound());
+        Student std = studentRepo.findById(id);
+        if (std == null  || std.isEmpty())
+            return null;
+        if (std.getSchool().getId() != getSchoolId())
+            return null;
+
+        return schoolRepository.findByStudentId(id).map(this::convertToStudentResponseDTO);
     }
 
     Page<Student_Response_DTO> getStudentsByFilter(Student_Request_DTO request, Pageable pg)
@@ -29,7 +35,15 @@ public class SchoolService
         Long id = getSchoolId();
         request.setSchoolId(id);
         Specification spec = StudentSpecification.searchStudent(request);
-        return schoolRepository.findAll(spec, pg).map(this->convertToStudentResponseDTO).orElseThrow(()-> new StudentNotFound());
+        return schoolRepository.findAll(spec, pg).map(this->convertToStudentResponseDTO);
     }
+
+    public Page<School> getAllSchools(Pageable pg)
+    {
+        return schoolRepository.FindAllSchools(pg);
+    }
+
+
+
 
 }

@@ -47,6 +47,15 @@ public class SchoolRestController
         return ResponseEntity.ok(stds);
     }
 
+    @GetMapping
+    public ResponseEntity<Page<School>> getAllSchools(Pageable pg)
+    {
+        Page<School> schools = schoolService.getAllSchools(pg);
+        if (schools == null || schools.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No schools found");
+        return ResponseEntity.ok(schools);
+    }
+
     
     
 

@@ -39,7 +39,7 @@ public class School
     @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-    @OneToMany(mappedBy = "school") // the mappedBy basically to point to the student 
+    @OneToMany(mappedBy = "school", fetch = FetchType.Eager) // the mappedBy basically to point to the student 
     private List<Student> students; // the OneToMany use fetch LAZY by default
 
     @Column(nullable = false, required = true)

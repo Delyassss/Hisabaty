@@ -1,6 +1,8 @@
 package com.hisabaty.demo.Student;
 
 
+
+
 public class StudentNotFound extends RuntimeException
 {
         public StudentNotFound(String cin)
