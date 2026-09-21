@@ -37,4 +37,6 @@ public class School_Request_DTO
 
     private Long studentCount;
     private String studentCinPrefix;
+
+    
 }

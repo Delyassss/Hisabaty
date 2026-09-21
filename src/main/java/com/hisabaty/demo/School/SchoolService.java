@@ -23,7 +23,7 @@ public class SchoolService
 
     Page<Student_Response_DTO>  getStudent(Pageable pg)
     {
-        return ToStudent_Response_DTO(studentRepo.findAll(pg));
+        return StudentService.ToStudentResponseDTO(studentRepo.findAll(pg));
     }
 
 

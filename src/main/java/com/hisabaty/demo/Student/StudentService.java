@@ -181,7 +181,7 @@ public class StudentService
 
 
     // Convert Utils
-    public Student_Request_DTO convertToStudentRequestDTO(Student student)
+    public static Student_Request_DTO convertToStudentRequestDTO(Student student)
     {
         if (student == null)
             return null;
@@ -197,7 +197,7 @@ public class StudentService
         std.setSchoolId(student.getSchool().getId());
         return std;
     }
-    public Page<Student_Request_DTO> ToStudentRequestDTO(Page<Student> student)
+    public static Page<Student_Request_DTO> ToStudentRequestDTO(Page<Student> student)
     {
          if (student == null)
             return null;
@@ -208,7 +208,7 @@ public class StudentService
 
 
 
-    public Student_Response_DTO convertToStudentResponseDTO(Student student)
+    public static Student_Response_DTO convertToStudentResponseDTO(Student student)
     {
          if (student == null)
             return null;
@@ -224,7 +224,7 @@ public class StudentService
         std.setSchoolId(student.getSchool().getId());
         return std;
     }
-    public Page<Student_Response_DTO> ToStudentResponseDTO(Page<Student> student)
+    public static Page<Student_Response_DTO> ToStudentResponseDTO(Page<Student> student)
     {
          if (student == null)
             return null;

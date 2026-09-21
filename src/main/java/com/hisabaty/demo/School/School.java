@@ -1,12 +1,17 @@
 package com.hisabaty.demo.School;
 
+import java.util.List;
+
 import jakarta.persistence.*;
-import lombok.Data;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
+import jakarta.validation.constraints.*;
 import jakarta.validation.constraints.NotNull;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import java.time.LocalDate;
+
+import com.hisabaty.demo.Student.Student;
+//import java.util.List;
+
 
 @Entity
 @Table(name = "schools")
@@ -19,46 +24,40 @@ import java.time.LocalDate;
  * 
  * Solution: Explicitly use @Getter and @Setter to avoid generating toString().
  */
+
+
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 
-public enum LicenseType
-{
-    A1 ,
-    A ,
-    B , 
-    C , 
-    D ,
-    E 
-}
 public class School
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-    @OneToMany(mappedBy = "school", fetch = FetchType.Eager) // the mappedBy basically to point to the student 
+    @OneToMany(mappedBy = "school", fetch = FetchType.EAGER) // the mappedBy basically to point to the student 
     private List<Student> students; // the OneToMany use fetch LAZY by default
 
-    @Column(nullable = false, required = true)
+    @Column(nullable = false)
     @NotBlank(message = "Name is required")
         private String name;
 
-    @Column(nullable = false, required = true)
+    @Column(nullable = false)
     @NotBlank(message = "Address is required")
         private String address;
 
-    @Column(name = "phone", length = 20 , nullable = false, required = true)
+    @Column(name = "phone", length = 20 , nullable = false)
     @NotBlank(message = "Phone is required")
         private String phone;
 
-    @Column(unique = true, nullable = false, required = true)
+    @Column(unique = true, nullable = false)
     @NotBlank(message = "Email is required")
         private String email;
 
-    @Column(nullable = false, required = true)
+    @Column(nullable = false)
     @NotBlank(message = "City is required")
         private String city;
 
@@ -66,7 +65,7 @@ public class School
     @NotNull(message = "State is required")
         private Boolean state = true;
 
-    @Column(nullable = false, required = true)
+    @Column(nullable = false)
     @NotNull(message = "Practice days is required")
     @Min(value = 1, message = "Practice days must be at least 1")
     @Max(value = 7, message = "Practice days must be at most 7")
@@ -77,9 +76,9 @@ public class School
     private List<String> licenseAvailable;
 
     @Column(name = "student_count")
-    private Long studentCount = 0;
+    private Integer studentCount = 0;
     
-    Long  studentIndex = -1;
+    Integer  studentIndex = -1;
     String  studentCinPrefix;
     
     

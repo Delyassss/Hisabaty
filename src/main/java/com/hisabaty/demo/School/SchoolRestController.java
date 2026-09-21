@@ -9,7 +9,6 @@ import com.hisabaty.demo.School.School;
 import lombok.RequiredArgsConstructor;
 
 import com.hisabaty.demo.Student.*;
-import com.hisabaty.demo.School.*;
 
 
 
@@ -23,13 +22,13 @@ public class SchoolRestController
 
 
     @GetMapping("/students")
-    ResponseEntity<Page<Student_Response_DTO>> getStudent(Pageable pg)
+    ResponseEntity<Page<Student_Response_DTO>> getStudents(Pageable pg)
     {
         Page<Student_Response_DTO> stds = schoolService.getStudent(pg);
 
         if (stds == null || stds.isEmpty())
         {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No students found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(stds);
     }
@@ -40,7 +39,7 @@ public class SchoolRestController
         Student_Response_DTO std = schoolService.getStudentById(id);
         if (std == null)
         {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No student found with id " + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(std);
     }
@@ -51,17 +50,17 @@ public class SchoolRestController
     {
         Page<Student_Response_DTO> stds = schoolService.getStudentsByFilter(request, pg);
         if (stds == null || stds.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No students found with the given filter");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         
         return ResponseEntity.ok(stds);
     }
 
     @GetMapping
-    public ResponseEntity<Page<School>> getAllSchools(Pageable pg)
+    public ResponseEntity<Page<School_Response_DTO>> getAllSchools(Pageable pg)
     {
-        Page<School> schools = schoolService.getAllSchools(pg);
+        Page<School_Response_DTO> schools = schoolService.getAllSchools(pg);
         if (schools == null || schools.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No schools found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(schools);
     }
 
