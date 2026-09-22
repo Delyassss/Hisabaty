@@ -1,14 +1,12 @@
-import java.util.Optional;
+package com.hisabaty.demo.School;
 
+
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
-
-import com.hisabaty.demo.School.SchoolRepository;
 import com.hisabaty.demo.Student.*;
 
 
@@ -21,34 +19,34 @@ public class SchoolService
     private final StudentRepository studentRepo;
 
 
-    Page<Student_Response_DTO>  getStudent(Pageable pg)
+    Page<Student_Response_DTO> getStudent(Pageable pg)
     {
         return StudentService.ToStudentResponseDTO(studentRepo.findAll(pg));
     }
 
 
-    Student_Response_DTO getStudentById(Long id)
+    Student_Response_DTO getStudentById(Long studentId, Long schoolId)
     {
-        Optional<Student> std = studentRepo.findById(id);
+        Optional<Student> std = studentRepo.findById(studentId);
         if (std == null  || std.isEmpty())
             return null;
-        if (std.get().getSchool().getId() != getSchoolId())
+        if (std.get().getSchool().getId() != schoolId)
             return null;
 
-        return studentRepo.findById(id).map(this::convertToStudentResponseDTO);
+        return StudentService.convertToStudentResponseDTO(std.get());
     }
 
-    Page<Student_Response_DTO> getStudentsByFilter(Student_Request_DTO request, Pageable pg)
+    Page<Student_Response_DTO> getStudentsByFilter(Student_Request_DTO request,Long id, Pageable pg)
     {
-        Long id = getSchoolId();
-        request.setSchoolId(id);
+        request.setSchoolId(id); // set school id just to make sure the request in on the correct school
         Specification spec = StudentSpecification.searchStudent(request);
-        return schoolRepository.findAll(spec, pg).map(this::convertToStudentResponseDTO);
+        return studentRepo.findAll(spec, pg).map(StudentService::convertToStudentResponseDTO);
     }
 
     public Page<School_Response_DTO> getAllSchools(Pageable pg)
     {
-        return schoolRepository.FindAllSchools(pg).map(this::ToSchoolResponseDTO);
+        Page<School_Response_DTO> sch =  schoolRepository.findAllSchools(pg).map(School_Response_DTO::ToSchoolResponseDTO);
+        return sch;
     }
 
 

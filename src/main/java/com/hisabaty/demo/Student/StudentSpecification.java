@@ -1,8 +1,11 @@
+package com.hisabaty.demo.Student;
+
+
 import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 import java.util.ArrayList;
 import jakarta.persistence.criteria.Predicate;
-import org.springframework.util.StringUtils
+import org.springframework.util.StringUtils;
 
 public class StudentSpecification {
 

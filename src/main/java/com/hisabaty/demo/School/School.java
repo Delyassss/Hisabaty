@@ -62,7 +62,7 @@ public class School
         private String city;
 
     @Column(nullable = false)
-    @NotNull(message = "State is required")
+    @NotNull(message = "State is required") 
         private Boolean state = true;
 
     @Column(nullable = false)

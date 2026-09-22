@@ -15,5 +15,5 @@ public interface SchoolRepository extends JpaRepository<School, Long>
 
     Optional<School> findByCin(String cin);
     @Query("SELECT s FROM School s LEFT JOIN ON Student std  WHERE std.school.id = s.id")
-    Page<School> FindAllSchools();
+    Page<School> findAllSchools(Pageable pg);
 }

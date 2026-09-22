@@ -26,20 +26,19 @@ public class StudentRestController
                                               @RequestParam Long schoolID)
     {
         Student std = studentService.createStudent(student, schoolID);
-        return ResponseEntity.status(HttpStatus.CREATED).body(studentService.convertToStudentRequestDTO(std));
+        return ResponseEntity.status(HttpStatus.CREATED).body(studentService.convertToStudentResponseDTO(std));
     }
 
     // GET BY SCHOOL ID
     @GetMapping("/school/{schoolId}")
-    public ResponseEntity<Page<Student_Response_DTO>> getStudentsBySchool(@PathVariable Long schoolId,
-                                                                @RequestParam(defaultValue = "0") int page,
-                                                                @RequestParam(defaultValue = "10") int size)
+    public ResponseEntity<Page<Student_Response_DTO>> getStudentsBySchool(@PathVariable Long schoolId, Pageable pg)
     {
         if (schoolId < 0)
             throw (new IllegalArgumentException("Invalid school id!"));
 
-       Page<Student> students = studentService.getStudentsBySchool(schoolId, getpages(page, size));
-        return ResponseEntity.ok(studentService.ToStudentResponseDTO(students));
+       Page<Student_Response_DTO> students = studentService.getStudentsBySchool(schoolId, pg);
+
+        return ResponseEntity.ok(students);
     }
 
 
