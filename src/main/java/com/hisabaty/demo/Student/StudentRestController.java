@@ -55,15 +55,13 @@ public class StudentRestController
     
 
     // GET ALL STUDENTS
-    @GetMapping
-    public ResponseEntity<Page<Student_Response_DTO>> getStudentsByfilter(@RequestBody Student_Request_DTO request, 
-                                                        @RequestParam(defaultValue = "0") int page,
-                                                        @RequestParam(defaultValue =  "10") int size)
+    @GetMapping("/filter/{schoolId}")
+    public ResponseEntity<Page<Student_Response_DTO>> getStudentsByfilter(@RequestBody Student_Request_DTO request, @PathVariable Long schoolId, Pageable pg)
     {
         if (request.getSchoolId() < 0)
             throw (new IllegalArgumentException("Invalid school id!"));
 
-        Page<Student_Response_DTO>  stds = studentService.getStudentDynamically(request, getpages(page, size));
+        Page<Student_Response_DTO>  stds = studentService.getStudentDynamically(request, schoolId, pg);
         if (stds.isEmpty())
             throw new StudentNotFound();
         return ResponseEntity.ok(stds);
