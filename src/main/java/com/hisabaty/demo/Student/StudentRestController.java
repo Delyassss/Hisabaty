@@ -20,7 +20,10 @@ public class StudentRestController
     private final StudentService studentService;
 
 
-    // CREATE
+    /* ************************************************************************** */
+    /*                              POST REQUESTS                                 */
+    /* ************************************************************************** */
+
     @PostMapping("/add-student")
     public ResponseEntity<Student_Response_DTO> addStudent(@Valid @RequestBody Student_Request_DTO student,
                                               @RequestParam Long schoolID)
@@ -29,7 +32,24 @@ public class StudentRestController
         return ResponseEntity.status(HttpStatus.CREATED).body(studentService.convertToStudentResponseDTO(std));
     }
 
-    // GET BY SCHOOL ID
+    // When they click "Yes", your frontend code silently sends the POST request to /api/students/{id}/consume-practice
+    @PostMapping("/{studentId}/attendance")
+    public ResponseEntity<String> recordAttendance(@PathVariable("studentId") Long id,
+                                                   @RequestParam(required = false) Boolean Attended)
+    {
+        if (id < 0)
+            throw new IllegalArgumentException("Invalid student id!");
+
+        studentService.AttendingCheck(id, Attended);
+        String msg = Attended ? "Attendance recorded as present!" : "Attendance recorded as absent!";
+        return ResponseEntity.status(HttpStatus.OK).body(msg);
+    }
+
+
+    /* ************************************************************************** */
+    /*                              GET REQUESTS                                 */
+    /* ************************************************************************** */
+
     @GetMapping("/school/{schoolId}")
     public ResponseEntity<Page<Student_Response_DTO>> getStudentsBySchool(@PathVariable Long schoolId, Pageable pg)
     {
@@ -56,7 +76,7 @@ public class StudentRestController
 
     // GET ALL STUDENTS
     @GetMapping("/filter/{schoolId}")
-    public ResponseEntity<Page<Student_Response_DTO>> getStudentsByfilter(@RequestBody Student_Request_DTO request, @PathVariable Long schoolId, Pageable pg)
+    public ResponseEntity<Page<Student_Response_DTO>> getStudentsByfilter(@Valid @RequestBody Student_Request_DTO request, @PathVariable Long schoolId, Pageable pg)
     {
         if (request.getSchoolId() < 0)
             throw (new IllegalArgumentException("Invalid school id!"));
@@ -68,18 +88,47 @@ public class StudentRestController
 
     }
 
-    // When they click "Yes", your frontend code silently sends the POST request to /api/students/{id}/consume-practice
-@PostMapping("/{studentId}/attendance")
-public ResponseEntity<String> recordAttendance(@PathVariable("studentId") Long id,
-                                               @RequestParam(required = false) Boolean Attended)
-{
-    if (id < 0)
-        throw new IllegalArgumentException("Invalid student id!"); 
+    /* ************************************************************************* */
+    /*                              PUT REQUESTS                                 */
+    /* ************************************************************************** */
 
-    studentService.AttendingCheck(id, Attended);
-    String msg = Attended ? "Attendance recorded as present!" : "Attendance recorded as absent!";
-    return ResponseEntity.status(HttpStatus.OK).body(msg);
-}
+
+    @PutMapping("/update/{student_id}")
+    ResponseEntity<Student> UpdateStudent(@PathVariable("student_id") Long id, @Valid @RequestBody Student_Request_DTO request)
+    {
+        Student std = studentService.UpdateStudent(id , request);
+
+        if (std == null)
+            return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(std);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
