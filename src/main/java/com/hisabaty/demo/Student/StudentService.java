@@ -32,7 +32,9 @@ public class StudentService {
     private final StudentRepository studentRepo;
     private final SchoolRepository schoolRepo;
 
-    // CREATE
+    /* ************************************************************************** */
+    /*                              POST REQUESTS                                 */
+    /* ************************************************************************** */
     public Student createStudent(Student_Request_DTO student, Long schoolId) {
         if (student == null || schoolId < 0) {
             throw (new IllegalArgumentException("Invalid student or school id!"));
@@ -71,6 +73,10 @@ public class StudentService {
         return studentRepo.save(newStudent.get());
     }
 
+    /* ************************************************************************** */
+    /*                              GET REQUESTS                                  */
+    /* ************************************************************************** */
+
     public Page<Student_Response_DTO> getStudentsBySchool(Long schoolId, Pageable pageable) {
         if (schoolId < 0) {
             throw (new IllegalArgumentException("Invalid school id!"));
@@ -97,6 +103,18 @@ public class StudentService {
         return studentRepo.findAll(spec, pg).map(s -> convertToStudentResponseDTO(s)); // this is just a shortcut for one -> this->convert..
 
     }
+
+
+    /* ************************************************************************** */
+    /*                              PUT REQUESTS                                 */
+    /* ************************************************************************** */
+
+
+
+
+
+
+
 
     // Days Schedule (this will run every Monday at 00:00 be)
     // Run at 00:00:00, regardless of the date or month, as long as the day is a Monday.
@@ -156,6 +174,16 @@ public class StudentService {
         return Attended;
     }
 
+
+
+
+
+
+
+
+
+
+
     // Convert Utils
     public static Student_Request_DTO convertToStudentRequestDTO(Student student) {
         if (student == null) {
@@ -208,5 +236,6 @@ public class StudentService {
         std = student.map(s -> convertToStudentResponseDTO(s));
         return std;
     }
+
 
 }

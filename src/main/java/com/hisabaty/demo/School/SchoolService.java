@@ -73,20 +73,12 @@ public class SchoolService {
 
     public School addSchool(School_Request_DTO request)
     {
-        Optional<School> sch = schoolRepository.getSchoolByName(request.getName());
+        Optional<School> sch = schoolRepository.getSchoolByName(request.getName()); //  we need another method to check if the school with the same name exist in the STATE
+
         if (sch != null && !sch.isEmpty())
             return sch.get();
 
-        sch.get().setName(request.getName());
-        sch.get().setAddress(request.getAddress());
-        sch.get().setPhone(request.getPhone());
-        sch.get().setEmail(request.getEmail());
-        sch.get().setLicenseAvailable(request.getLicenseAvailable());
-        sch.get().setPracticeDaysPerWeek(request.getPracticeDaysPerWeek());
-        sch.get().setState(request.getState());
-        sch.get().setCity(request.getCity());
-        sch.get().setStudents(request.getStudents());
-        sch.get().setStudentCount(request.getStudentCount());
+        sch = settersSchool(request, sch);
         schoolRepository.save(sch.get());
         return sch.get();
     }
@@ -100,6 +92,79 @@ public class SchoolService {
     }
 
 
+    /* ************************************************************************** */
+    /*                              PUT REQUESTS                                 */
+    /* ************************************************************************** */
+
+
+    public School UpdateSchool(Long schoolId, School_Request_DTO request)
+    {
+        Optional<School> sch = schoolRepository.findById(schoolId);
+
+        if (request == null)
+                return  sch.get();
+
+        sch = settersSchool(request, sch);
+
+        return schoolRepository.save(sch.get());
+    }
+
+    public Student_Response_DTO UpdateStudent(Long schoolId, Long student_id , Student_Request_DTO request)
+    {
+        Optional<Student> std = studentRepo.findById(student_id);
+        if (std == null || std.isEmpty())
+        {
+           return addStudent(request, schoolId);
+        }
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // UTILS
+    public Optional<School> settersSchool(School_Request_DTO request , Optional<School> sch)
+    {
+        sch.get().setName(request.getName());
+        sch.get().setAddress(request.getAddress());
+        sch.get().setPhone(request.getPhone());
+        sch.get().setEmail(request.getEmail());
+        sch.get().setLicenseAvailable(request.getLicenseAvailable());
+        sch.get().setPracticeDaysPerWeek(request.getPracticeDaysPerWeek());
+        sch.get().setState(request.getState());
+        sch.get().setCity(request.getCity());
+        sch.get().setStudents(request.getStudents());
+        sch.get().setStudentCount(request.getStudentCount());
+        return sch;
+    }
 
 }
 

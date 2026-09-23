@@ -21,6 +21,8 @@ public class SchoolRestController {
 
     @Autowired
     private final SchoolService schoolService;
+    @Autowired
+    private StudentService studentService;
 
     /* ************************************************************************** */
     /*                              GET REQUESTS                                  */
@@ -99,9 +101,36 @@ public class SchoolRestController {
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(std);
     }
+
+    /* ************************************************************************** */
+    /*                              PUT REQUESTS                                 */
+    /* ************************************************************************** */
+
+
+    @PutMapping("/update/{school_id}")
+    public ResponseEntity<School>  updateSchool(@PathVariable Long school_id, @RequestBody School_Request_DTO request)
+    {
+        School sch = schoolService.UpdateSchool(school_id, request);
+        if (sch == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(sch);
+    }
+
+    @PutMapping("/update/{school_id}/{student_id}")
+    public ResponseEntity<Student_Response_DTO > Update_Student(@PathVariable Long school_id, @PathVariable Long student_id , @RequestBody Student_Request_DTO request)
+    {
+        Student std   = schoolService.UpdateStudent(school_id, student_id, request);
+
+        if (std == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(std);
+    }
+
+
     
 
 
 
 
 }  
+
