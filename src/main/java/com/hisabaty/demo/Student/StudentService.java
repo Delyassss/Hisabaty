@@ -1,6 +1,5 @@
 package com.hisabaty.demo.Student;
 
-import ch.qos.logback.core.joran.conditional.ElseAction;
 
 import com.hisabaty.demo.School.School;
 import com.hisabaty.demo.School.SchoolRepository;
@@ -24,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import com.hisabaty.demo.School.SchoolNotFound;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class StudentService {
         if (student == null || schoolId < 0) {
             throw (new IllegalArgumentException("Invalid student or school id!"));
         }
-        School school = schoolRepo.findById(schoolId).orElseThrow(() -> new RuntimeException("School not found !"));
+        School school = schoolRepo.findById(schoolId).orElseThrow(() -> new SchoolNotFound(schoolId));
         Optional<Student> newStudent = studentRepo.findByCin(student.getCin());
         if (newStudent.isPresent()) // isPresent is a method that checks if the optional is empty or not 
         {
@@ -66,6 +66,8 @@ public class StudentService {
         }
         newStudent.get().setEmail(student.getEmail());
         newStudent.get().setRemainingDaysPerWeek(school.getPracticeDaysPerWeek());
+        school.setStudentCount(school.getStudentCount() + 1);
+
         return studentRepo.save(newStudent.get());
     }
 

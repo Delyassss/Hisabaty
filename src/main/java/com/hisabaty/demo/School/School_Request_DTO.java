@@ -2,6 +2,7 @@ package com.hisabaty.demo.School;
 
 import java.util.List;
 
+import com.hisabaty.demo.Student.Student;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -27,6 +28,9 @@ public class School_Request_DTO
     @NotNull(message = "State is required")
     private Boolean state;
 
+    private List<Student> students;
+
+
     @NotNull(message = "Practice days is required")
     @Min(value = 1, message = "Practice days must be at least 1")
     @Max(value = 7, message = "Practice days must be at most 7")
@@ -35,7 +39,7 @@ public class School_Request_DTO
 
     private List<String> licenseAvailable;
 
-    private Long studentCount;
+    private Integer studentCount;
     private String studentCinPrefix;
 
     

@@ -1,18 +1,22 @@
+package com.hisabaty.demo.School;
+
+import org.springframework.http.ResponseEntity;
 
 
+import org.springframework.http.HttpStatusCode;
 
 
 
 public class SchoolNotFound extends RuntimeException
 {
 
-    public SchoolNotFound(String name)
+    public SchoolNotFound(Long id)
     {
-        super("School not found with name : " + name);
+        super("School not found with id : " + id); 
     }
     
-    public static ResponseEntity<String name>  WebPage(String name)
+    public static ResponseEntity<String>  WebPage(String name)
     {
-        return ResponseEntity.HttpStatus.NOT_FOUND.body(name);
+        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(name);
     }
-}
+} 
