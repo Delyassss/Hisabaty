@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
 import com.hisabaty.demo.Student.*;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor // this is an annotation to inject the dependencies into the constructor  so no need for @Autowired
@@ -71,8 +73,7 @@ public class SchoolService {
     /* ************************************************************************** */
 
 
-    public School addSchool(School_Request_DTO request)
-    {
+    public School addSchool(School_Request_DTO request) {
         Optional<School> sch = schoolRepository.getSchoolByName(request.getName()); //  we need another method to check if the school with the same name exist in the STATE
 
         if (sch != null && !sch.isEmpty())
@@ -83,8 +84,7 @@ public class SchoolService {
         return sch.get();
     }
 
-    public Student_Response_DTO addStudent(Student_Request_DTO request, Long schoolId)
-    {
+    public Student_Response_DTO addStudent(Student_Request_DTO request, Long schoolId) {
         Student std = studentService.createStudent(request, schoolId);
         if (std == null)
             return null;
@@ -97,29 +97,30 @@ public class SchoolService {
     /* ************************************************************************** */
 
 
-    public School UpdateSchool(Long schoolId, School_Request_DTO request)
-    {
+    public School UpdateSchool(Long schoolId, School_Request_DTO request) {
         Optional<School> sch = schoolRepository.findById(schoolId);
 
         if (request == null)
-                return  sch.get();
+            return sch.get();
 
         sch = settersSchool(request, sch);
 
         return schoolRepository.save(sch.get());
     }
 
-    public Student_Response_DTO UpdateStudent(Long schoolId, Long student_id , Student_Request_DTO request)
+    public Student UpdateStudent(Long schoolId, Long student_id, Student_Request_DTO request)
     {
         Optional<Student> std = studentRepo.findById(student_id);
         if (std == null || std.isEmpty())
-        {
-           return addStudent(request, schoolId);
-        }
+            return null;
 
-
-
+        std = studentService.UpdateStudent(student_id , request);
+        if (std == null || std.isEmpty())
+            return null;
+        return std.get();
     }
+
+
 
 
 
@@ -153,16 +154,25 @@ public class SchoolService {
     // UTILS
     public Optional<School> settersSchool(School_Request_DTO request , Optional<School> sch)
     {
-        sch.get().setName(request.getName());
-        sch.get().setAddress(request.getAddress());
-        sch.get().setPhone(request.getPhone());
-        sch.get().setEmail(request.getEmail());
-        sch.get().setLicenseAvailable(request.getLicenseAvailable());
+        if (StringUtils.hasText(request.getName()))
+            sch.get().setName(request.getName());
+        if (StringUtils.hasText(request.getAddress()))
+            sch.get().setAddress(request.getAddress());
+        if (StringUtils.hasText(request.getPhone()))
+            sch.get().setPhone(request.getPhone());
+        if (StringUtils.hasText(request.getEmail()))
+            sch.get().setEmail(request.getEmail());
+        if (!request.getLicenseAvailable().isEmpty() && request.getLicenseAvailable() != null)
+            sch.get().setLicenseAvailable(request.getLicenseAvailable());
         sch.get().setPracticeDaysPerWeek(request.getPracticeDaysPerWeek());
-        sch.get().setState(request.getState());
-        sch.get().setCity(request.getCity());
-        sch.get().setStudents(request.getStudents());
-        sch.get().setStudentCount(request.getStudentCount());
+        if (request.getState() != null)
+            sch.get().setState(request.getState());
+        if (StringUtils.hasText(request.getCity()))
+            sch.get().setCity(request.getCity());
+        if (request.getStudents() != null && !request.getStudents().isEmpty()) // here the school may reser its Own student list to zero just like delete so i forced it to just ignore an null Value or empty List
+            sch.get().setStudents(request.getStudents());
+        if (request.getStudentCount() != null)
+            sch.get().setStudentCount(request.getStudentCount());
         return sch;
     }
 

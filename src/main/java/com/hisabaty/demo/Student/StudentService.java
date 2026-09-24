@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import com.hisabaty.demo.School.SchoolNotFound;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -109,6 +110,18 @@ public class StudentService {
     /*                              PUT REQUESTS                                 */
     /* ************************************************************************** */
 
+        public Optional<Student> UpdateStudent(Long id , Student_Request_DTO req)
+        {
+           Optional<Student> std = studentRepo.findById(id);
+           if (std.isEmpty())
+                  return Optional.empty();
+
+                std = setterStudents(std , req);
+
+                studentRepo.save(std.get());
+                return  std;
+        }
+            
 
 
 
@@ -234,6 +247,41 @@ public class StudentService {
         }
         Page<Student_Response_DTO> std;
         std = student.map(s -> convertToStudentResponseDTO(s));
+        return std;
+    }
+
+    public static Optional<Student> setterStudents(Optional<Student> std , Student_Request_DTO request)
+    {
+        if (request == null || std == null)
+            return null;
+
+        if (StringUtils.hasText(request.getName()))
+            std.setName(request.getName());
+        
+        if(StringUtils.hasText(request.getCin()))
+            std.setCin(request.getCin());
+        
+        if(StringUtils.hasText(request.getEmail()))
+            std.setEmail(request.getEmail());
+        
+        if(StringUtils.hasText(request.getPhone()))
+            std.setPhone(request.getPhone());
+        
+        if(request.getTypeOfLicense() != null)
+            std.setTypeOfLicense(request.getTypeOfLicense());
+        
+        if(request.getAlreadyPassedCode() != null)
+            std.setAlreadyPassedCode(request.getAlreadyPassedCode());
+        
+        if(request.getAdvancePayment() != null)
+            std.setAdvancePayment(request.getAdvancePayment());
+        
+        if(request.getRemainingPayment() != null)
+            std.setRemainingPayment(request.getRemainingPayment());
+        
+        // if(request.getSchoolId() != null) // ---> can shcools set their own student to schools?
+        //     std.setSchoolId(request.getSchoolId());
+
         return std;
     }
 

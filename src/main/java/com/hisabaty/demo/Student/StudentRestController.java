@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -96,11 +97,11 @@ public class StudentRestController
     @PutMapping("/update/{student_id}")
     ResponseEntity<Student> UpdateStudent(@PathVariable("student_id") Long id, @Valid @RequestBody Student_Request_DTO request)
     {
-        Student std = studentService.UpdateStudent(id , request);
+        Optional<Student> std = studentService.UpdateStudent(id , request);
 
-        if (std == null)
+        if (std == null || std.isEmpty())
             return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(std);
+        return ResponseEntity.ok(std.get());
     }
 
 

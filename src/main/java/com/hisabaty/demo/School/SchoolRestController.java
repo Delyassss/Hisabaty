@@ -117,7 +117,7 @@ public class SchoolRestController {
     }
 
     @PutMapping("/update/{school_id}/{student_id}")
-    public ResponseEntity<Student_Response_DTO > Update_Student(@PathVariable Long school_id, @PathVariable Long student_id , @RequestBody Student_Request_DTO request)
+    public ResponseEntity<Student> Update_Student(@PathVariable Long school_id, @PathVariable Long student_id , @RequestBody Student_Request_DTO request)
     {
         Student std   = schoolService.UpdateStudent(school_id, student_id, request);
 
@@ -127,7 +127,7 @@ public class SchoolRestController {
     }
 
 
-    
+
 
 
 
