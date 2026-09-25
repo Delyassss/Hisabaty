@@ -15,7 +15,7 @@ import com.hisabaty.demo.Student.*;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/v1/schools")
+@RequestMapping("/api/schools")
 @RequiredArgsConstructor
 public class SchoolRestController {
 
@@ -28,47 +28,50 @@ public class SchoolRestController {
     /*                              GET REQUESTS                                  */
     /* ************************************************************************** */
 
-    @GetMapping("/students")
-    ResponseEntity<Page<Student_Response_DTO>> getStudents(Pageable pg) {
+    // @GetMapping("/students")
+    // ResponseEntity<Page<Student_Response_DTO>> getStudents(Pageable pg) {
 
-        Page<Student_Response_DTO> stds = schoolService.getStudent(pg);
+    //     Page<Student_Response_DTO> stds = schoolService.getStudent(pg);
 
-        if (stds == null || stds.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(stds);
-    }
+    //     if (stds == null || stds.isEmpty()) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    //     }
+    //     return ResponseEntity.ok(stds);
+    // }
 
-    @GetMapping("/{school_id}/students/{student_id}")
-    ResponseEntity<Student_Response_DTO> getStudentById(@PathVariable Long student_id, @PathVariable Long school_id) {
-        Student_Response_DTO std = schoolService.getStudentById(student_id, school_id);
-        if (std == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(std);
-    }
+    // @GetMapping("/{school_id}/students/{student_id}")
+    // ResponseEntity<Student_Response_DTO> getStudentById(@PathVariable Long student_id, @PathVariable Long school_id) {
+    //     Student_Response_DTO std = schoolService.getStudentById(student_id, school_id);
+    //     if (std == null) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    //     }
+    //     return ResponseEntity.ok(std);
+    // }
 
-    @GetMapping("{school_id}/students/filter")
-    public ResponseEntity<Page<Student_Response_DTO>> getStudentsByFilter(Student_Request_DTO request, @PathVariable Long school_id, Pageable pg)
+    // @GetMapping("{school_id}/students/filter")
+    // public ResponseEntity<Page<Student_Response_DTO>> getStudentsByFilter(Student_Request_DTO request, @PathVariable Long school_id, Pageable pg)
+    // {
+    //     Page<Student_Response_DTO> stds = schoolService.getStudentsByFilter(request, school_id, pg);
+    //     if (stds == null || stds.isEmpty()) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    //     }
+
+    //     return ResponseEntity.ok(stds);
+    // }
+
+    @GetMapping("/admin/allSchools")
+    public ResponseEntity<Page<School_Response_DTO>> getAllSchools(Pageable pg)
     {
-        Page<Student_Response_DTO> stds = schoolService.getStudentsByFilter(request, school_id, pg);
-        if (stds == null || stds.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return ResponseEntity.ok(stds);
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<Page<School_Response_DTO>> getAllSchools(Pageable pg) {
         Page<School_Response_DTO> schools = schoolService.getAllSchools(pg);
-        if (schools == null || schools.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        if (schools == null)
+            return ResponseEntity.notFound().build();
+        if (schools.isEmpty())
+            return ResponseEntity.noContent().build();
         return ResponseEntity.ok(schools);
     }
 
-    @GetMapping("/{school_id}")
+    // DEFAULT ENDPOINT
+    @GetMapping("{school_id}")
     public ResponseEntity<School_Response_DTO> getSchoolById(@PathVariable Long school_id , Pageable pg)
     {
         School_Response_DTO  sch = schoolService.getSchoolById(school_id , pg);
@@ -93,14 +96,14 @@ public class SchoolRestController {
         
         return ResponseEntity.ok(sch);
     }
-    @PostMapping("/create/{school_id}/student")
-    public ResponseEntity<Student_Response_DTO> addStudent(@RequestBody Student_Request_DTO request , @PathVariable Long school_id)
-    {
-        Student_Response_DTO std = schoolService.addStudent(request, school_id);
-        if (std == null)
-            return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(std);
-    }
+    // @PostMapping("/create/{school_id}/student")
+    // public ResponseEntity<Student_Response_DTO> addStudent(@RequestBody Student_Request_DTO request , @PathVariable Long school_id)
+    // {
+    //     Student_Response_DTO std = schoolService.addStudent(request, school_id);
+    //     if (std == null)
+    //         return ResponseEntity.notFound().build();
+    //     return ResponseEntity.ok(std);
+    // }
 
     /* ************************************************************************** */
     /*                              PUT REQUESTS                                 */
@@ -116,15 +119,40 @@ public class SchoolRestController {
         return ResponseEntity.ok(sch);
     }
 
-    @PutMapping("/update/{school_id}/{student_id}")
-    public ResponseEntity<Student> Update_Student(@PathVariable Long school_id, @PathVariable Long student_id , @RequestBody Student_Request_DTO request)
-    {
-        Student std   = schoolService.UpdateStudent(school_id, student_id, request);
+    // @PutMapping("/update/{school_id}/{student_id}")
+    // public ResponseEntity<Student> Update_Student(@PathVariable Long school_id, @PathVariable Long student_id , @RequestBody Student_Request_DTO request)
+    // {
+    //     Student std   = schoolService.UpdateStudent(school_id, student_id, request);
 
-        if (std == null)
-            return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(std);
+    //     if (std == null)
+    //         return ResponseEntity.notFound().build();
+    //     return ResponseEntity.ok(std);
+    // }
+
+    /* ************************************************************************** */
+    /*                              DELETE REQUESTS                               */
+    /* ************************************************************************** */
+
+
+    @DeleteMapping("/delete/{school_id}")
+    public ResponseEntity<Void> deleteSchool(@PathVariable Long school_id)
+    {
+        Boolean succes = schoolService.DeleteSchool(school_id);
+        if (!succes)
+                return ResponseEntity.notFound().build();
+
+        return ResponseEntity.noContent().build();
     }
+
+    // @DeleteMapping("{school_id}/{student_id}")
+    // public ResponseEntity<Void> deleteStudent(@PathVariable Long school_id, @PathVariable Long student_id)
+    // {
+    //     Boolean succes = schoolService.DeleteStudent(school_id, student_id);
+    //     if (!succes)
+    //             return ResponseEntity.notFound().build();
+    //     return ResponseEntity.noContent().build();
+    // }
+
 
 
 

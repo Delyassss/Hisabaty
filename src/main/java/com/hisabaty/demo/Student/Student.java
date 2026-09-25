@@ -1,18 +1,25 @@
 package com.hisabaty.demo.Student;
 
 import com.hisabaty.demo.School.School;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
 import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.validation.constraints.Pattern;
+
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.SQLDelete;
 
 enum Status {
     THEORY_TRAINING,
@@ -35,6 +42,8 @@ enum AttendanceStatus
 @Table(name = "students") // this will create a table named students in the database
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE students SET deleted = true WHERE id = ?")
+@SQLRestriction("deleted = false")
 public class Student
 {
     @Id
@@ -109,9 +118,11 @@ public class Student
     @Column(name = "remaining_payment")
     Double remainingPayment = 0.0;
    public Double getTotalPaid()
-   {
+    {
         return ((advancePayment != null) ? advancePayment : 0.0) + 
                ((remainingPayment != null ) ? remainingPayment : 0.0);
     }
+    private Boolean deleted = false;
+
 }
 

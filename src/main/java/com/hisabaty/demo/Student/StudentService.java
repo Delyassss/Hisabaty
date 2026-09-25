@@ -78,21 +78,23 @@ public class StudentService {
     /*                              GET REQUESTS                                  */
     /* ************************************************************************** */
 
-    public Page<Student_Response_DTO> getStudentsBySchool(Long schoolId, Pageable pageable) {
-        if (schoolId < 0) {
-            throw (new IllegalArgumentException("Invalid school id!"));
-        }
+    public Page<Student_Response_DTO> getStudentsBySchool(Long schoolId, Pageable pageable)
+    {
         // Spring Data JPA automatically writes the SELECT * FROM students WHERE school_id = ?
-        return studentRepo.findBySchoolId(schoolId, pageable).map(student -> convertToStudentResponseDTO(student));
+        Optional<Page<Student>> stds = studentRepo.findBySchoolId(schoolId, pageable);
+        if (stds.isEmpty())
+            return null;
+        
+        return stds.get().map(student -> convertToStudentResponseDTO(student));
     }
 
-    public Student_Response_DTO getStudentById(Long id, Pageable pageable) {
-        if (id < 0) {
-            throw (new IllegalArgumentException("Invalid student id!"));
-        }
-        Student student = studentRepo.findById(id).orElseThrow(() -> new StudentNotFound());
+    public Student_Response_DTO getStudentById(Long id, Pageable pageable) 
+    {
+        Student student = studentRepo.findById(id).orElse(null);
+        if (student == null)
+            return null;
         return convertToStudentResponseDTO(student);
-    }
+    } 
 
     public Page<Student_Response_DTO> getStudentDynamically(Student_Request_DTO req, Long schoolId ,Pageable pg) {
         if (req == null) {
@@ -110,6 +112,7 @@ public class StudentService {
     /*                              PUT REQUESTS                                 */
     /* ************************************************************************** */
 
+    
         public Optional<Student> UpdateStudent(Long id , Student_Request_DTO req)
         {
            Optional<Student> std = studentRepo.findById(id);
@@ -121,7 +124,26 @@ public class StudentService {
                 studentRepo.save(std.get());
                 return  std;
         }
-            
+
+
+
+
+    /* ************************************************************************** */
+    /*                              DELETE REQUESTS                               */
+    /* ************************************************************************** */
+    
+    public Boolean DeleteStudent(Long id)
+    {
+        if (id < 0)
+            return false;
+
+        Optional<Student> std = studentRepo.findById(id);
+        if (std == null || std.isEmpty())
+            return false;
+        studentRepo.delete(std.get());
+        return true;
+    }
+
 
 
 
@@ -256,28 +278,28 @@ public class StudentService {
             return null;
 
         if (StringUtils.hasText(request.getName()))
-            std.setName(request.getName());
+            std.get().setName(request.getName());
         
         if(StringUtils.hasText(request.getCin()))
-            std.setCin(request.getCin());
+            std.get().setCin(request.getCin());
         
         if(StringUtils.hasText(request.getEmail()))
-            std.setEmail(request.getEmail());
+            std.get().setEmail(request.getEmail());
         
         if(StringUtils.hasText(request.getPhone()))
-            std.setPhone(request.getPhone());
+            std.get().setPhone(request.getPhone());
         
         if(request.getTypeOfLicense() != null)
-            std.setTypeOfLicense(request.getTypeOfLicense());
+            std.get().setTypeOfLicense(request.getTypeOfLicense());
         
         if(request.getAlreadyPassedCode() != null)
-            std.setAlreadyPassedCode(request.getAlreadyPassedCode());
+            std.get().setAlreadyPassedCode(request.getAlreadyPassedCode());
         
         if(request.getAdvancePayment() != null)
-            std.setAdvancePayment(request.getAdvancePayment());
+            std.get().setAdvancePayment(request.getAdvancePayment());
         
         if(request.getRemainingPayment() != null)
-            std.setRemainingPayment(request.getRemainingPayment());
+            std.get().setRemainingPayment(request.getRemainingPayment());
         
         // if(request.getSchoolId() != null) // ---> can shcools set their own student to schools?
         //     std.setSchoolId(request.getSchoolId());

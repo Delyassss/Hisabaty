@@ -121,6 +121,18 @@ public class SchoolService {
     }
 
 
+    /* ************************************************************************** */
+    /*                              DELETE REQUESTS                                */
+    /* ************************************************************************** */
+
+    public Boolean DeleteSchool(Long school_id)
+    {
+        Optional<School> sch = schoolRepository.findById(school_id);
+        if (sch == null || sch.isEmpty())
+            return false;
+        schoolRepository.delete(sch.get());
+        return true;
+    }
 
 
 

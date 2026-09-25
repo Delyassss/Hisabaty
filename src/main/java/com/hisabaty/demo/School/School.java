@@ -2,15 +2,17 @@ package com.hisabaty.demo.School;
 
 import java.util.List;
 
+import org.hibernate.annotations.SQLDelete;
+
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.validation.constraints.*;
 import jakarta.validation.constraints.NotNull;
 
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.hisabaty.demo.Student.Student;
-//import java.util.List;
 
 
 @Entity
@@ -31,6 +33,8 @@ import com.hisabaty.demo.Student.Student;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE students SET deleted = true Where id = ?")
+@SQLRestriction("deleted = false")
 
 public class School
 {
@@ -80,6 +84,8 @@ public class School
     
     Integer  studentIndex = -1;
     String  studentCinPrefix;
+
+    private Boolean deleted = false;
     
     
     

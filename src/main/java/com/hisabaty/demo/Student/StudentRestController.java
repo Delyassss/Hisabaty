@@ -2,6 +2,7 @@ package com.hisabaty.demo.Student;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +14,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.connector.Response;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/student")
+@RequestMapping("/api/schools/{schoolId}/students")
 public class StudentRestController
 {
     private final StudentService studentService;
@@ -51,40 +54,45 @@ public class StudentRestController
     /*                              GET REQUESTS                                 */
     /* ************************************************************************** */
 
-    @GetMapping("/school/{schoolId}")
+    @GetMapping("/all")
     public ResponseEntity<Page<Student_Response_DTO>> getStudentsBySchool(@PathVariable Long schoolId, Pageable pg)
     {
         if (schoolId < 0)
-            throw (new IllegalArgumentException("Invalid school id!"));
-
+            return ResponseEntity.badRequest().build();
+            
        Page<Student_Response_DTO> students = studentService.getStudentsBySchool(schoolId, pg);
+       if (students == null)
+            return ResponseEntity.notFound().build();
+        if (students.isEmpty())
+            return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(students);
     }
 
 
     @GetMapping("/{studentId}")
-    public ResponseEntity<Student_Response_DTO> getStudentbyId(@PathVariable("studentId") Long id,
-                                                              @RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "10") int size)
+    public ResponseEntity<Student_Response_DTO> getStudentbyId(@PathVariable("studentId") Long id, Pageable pg)
     {
         if (id < 0)
-            throw new IllegalArgumentException("Invalid student id!");
-        Student_Response_DTO std = studentService.getStudentById(id, getpages(page, size));
+            return ResponseEntity.badRequest().build();
+        Student_Response_DTO std = studentService.getStudentById(id, pg);
+        if (std == null)
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(std);
     }
     
 
     // GET ALL STUDENTS
-    @GetMapping("/filter/{schoolId}")
+    @GetMapping("/filter")
     public ResponseEntity<Page<Student_Response_DTO>> getStudentsByfilter(@Valid @RequestBody Student_Request_DTO request, @PathVariable Long schoolId, Pageable pg)
     {
         if (request.getSchoolId() < 0)
-            throw (new IllegalArgumentException("Invalid school id!"));
+            return  ResponseEntity.badRequest().build();
 
         Page<Student_Response_DTO>  stds = studentService.getStudentDynamically(request, schoolId, pg);
         if (stds.isEmpty())
-            throw new StudentNotFound();
+            return  ResponseEntity.notFound().build();
+            
         return ResponseEntity.ok(stds);
 
     }
@@ -99,9 +107,28 @@ public class StudentRestController
     {
         Optional<Student> std = studentService.UpdateStudent(id , request);
 
-        if (std == null || std.isEmpty())
+        if (std == null)
             return ResponseEntity.badRequest().build();
+        if (std.isEmpty())
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(std.get());
+    }
+
+
+    /* ************************************************************************** */
+    /*                              DELETE REQUESTS                                 */
+    /* ************************************************************************** */
+    
+    @DeleteMapping("/delete/{studentId}")
+    ResponseEntity<Void> DeleteStudent(@PathVariable Long studentId)
+    {
+        if (studentId < 0)
+            return ResponseEntity.badRequest().build();
+        Boolean succes = studentService.DeleteStudent(studentId);
+        if (!succes)
+            return ResponseEntity.notFound().build();
+        
+        return ResponseEntity.noContent().build();
     }
 
 
