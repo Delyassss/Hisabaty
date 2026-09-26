@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface SchoolRepository extends JpaRepository<School, Long>
 {
     // JpaRepository gives you built-in methods like .save(), .findAll(), and .findById()
-    Optional<School> findByCin(String cin);
+    //Optional<School> findByCin(String cin);
 
     @Query("SELECT DISTINCT s FROM School s LEFT JOIN FETCH s.students")
     Page<School> findAllSchools(Pageable pg);

@@ -74,6 +74,8 @@ public class SchoolRestController {
     @GetMapping("{school_id}")
     public ResponseEntity<School_Response_DTO> getSchoolById(@PathVariable Long school_id , Pageable pg)
     {
+        if (school_id < 0)
+            return ResponseEntity.badRequest().build();
         School_Response_DTO  sch = schoolService.getSchoolById(school_id , pg);
 
         if (sch == null)
