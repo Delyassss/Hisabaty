@@ -28,11 +28,13 @@ public class SchoolService {
     /*                              GET REQUESTS                                  */
     /* ************************************************************************** */
 
-    Page<Student_Response_DTO> getStudent(Pageable pg) {
+    Page<Student_Response_DTO> getStudent(Pageable pg)
+    {
         return StudentService.ToStudentResponseDTO(studentRepo.findAll(pg));
     }
 
-    Student_Response_DTO getStudentById(Long studentId, Long schoolId) {
+    Student_Response_DTO getStudentById(Long studentId, Long schoolId)
+    {
         Optional<Student> std = studentRepo.findById(studentId);
         if (std == null || std.isEmpty()) {
             return null;
@@ -44,24 +46,25 @@ public class SchoolService {
         return StudentService.convertToStudentResponseDTO(std.get());
     }
 
-    Page<Student_Response_DTO> getStudentsByFilter(Student_Request_DTO request, Long schoolId, Pageable pg) {
+    Page<Student_Response_DTO> getStudentsByFilter(Student_Request_DTO request, Long schoolId, Pageable pg)
+    {
 
         Specification<Student> spec = StudentSpecification.searchStudent(request, schoolId);
 
         return studentRepo.findAll(spec, pg).map(StudentService::convertToStudentResponseDTO);
     }
 
-    public Page<School_Response_DTO> getAllSchools(Pageable pg) {
+    public Page<School_Response_DTO> getAllSchools(Pageable pg)
+    {
         Page<School_Response_DTO> sch = schoolRepository.findAllSchools(pg).map(School_Response_DTO::ToSchoolResponseDTO);
         return sch;
     }
 
-    public School_Response_DTO getSchoolById(Long school_id, Pageable pg) {
-        Optional<School> sch = schoolRepository.findById(school_id);
-        if (sch == null || sch.isEmpty()) {
-            return null;
-        }
-        return School_Response_DTO.ToSchoolResponseDTO(sch.get());
+    public School_Response_DTO getSchoolById(Long school_id)
+    {
+        School sch = schoolRepository.findById(school_id).orElseThrow(() -> new SchoolNotFound(school_id));
+
+        return School_Response_DTO.ToSchoolResponseDTO(sch);
     }
 
 
@@ -73,15 +76,16 @@ public class SchoolService {
     /* ************************************************************************** */
 
 
-    public School addSchool(School_Request_DTO request) {
+    public School addSchool(School_Request_DTO request)
+    {
         Optional<School> sch = schoolRepository.getSchoolByName(request.getName()); //  we need another method to check if the school with the same name exist in the STATE
 
         if (sch != null && !sch.isEmpty())
             return sch.get();
 
         sch = settersSchool(request, sch);
-        schoolRepository.save(sch.get());
-        return sch.get();
+        return schoolRepository.save(sch.get());
+   
     }
 
     public Student_Response_DTO addStudent(Student_Request_DTO request, Long schoolId) {
@@ -166,6 +170,10 @@ public class SchoolService {
     // UTILS
     public Optional<School> settersSchool(School_Request_DTO request , Optional<School> sch)
     {
+        if (request == null)
+            return sch;
+        if (sch ==   null)
+            return null;
         if (StringUtils.hasText(request.getName()))
             sch.get().setName(request.getName());
         if (StringUtils.hasText(request.getAddress()))

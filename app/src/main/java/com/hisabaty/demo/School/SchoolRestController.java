@@ -1,5 +1,6 @@
 package com.hisabaty.demo.School;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,16 +8,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.hisabaty.demo.School.*;
 import com.hisabaty.demo.Student.*;
 
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/schools")
 @RequiredArgsConstructor
+@Validated
 public class SchoolRestController {
 
     @Autowired
@@ -62,25 +66,18 @@ public class SchoolRestController {
     @GetMapping("/admin/allSchools")
     public ResponseEntity<Page<School_Response_DTO>> getAllSchools(Pageable pg)
     {
-        Page<School_Response_DTO> schools = schoolService.getAllSchools(pg);
-        if (schools == null)
-            return ResponseEntity.notFound().build();
-        if (schools.isEmpty())
-            return ResponseEntity.noContent().build();
+        Page<School_Response_DTO> schools = schoolService.getAllSchools(pg); // Page does not return null just Empty
+
+        // Always return 200 OK.
+        // If empty, it automatically returns a valid Page JSON with an empty "content" array.
         return ResponseEntity.ok(schools);
     }
 
     // DEFAULT ENDPOINT
     @GetMapping("{school_id}")
-    public ResponseEntity<School_Response_DTO> getSchoolById(@PathVariable Long school_id , Pageable pg)
+    public ResponseEntity<School_Response_DTO> getSchoolById(@PathVariable @Positive Long school_id)
     {
-        if (school_id < 0)
-            return ResponseEntity.badRequest().build();
-        School_Response_DTO  sch = schoolService.getSchoolById(school_id , pg);
-
-        if (sch == null)
-            return ResponseEntity.notFound().build();
-        
+        School_Response_DTO  sch = schoolService.getSchoolById(school_id); // NotFoundExeption is thrown here if school not found
         return ResponseEntity.ok(sch);
     }
     
@@ -88,16 +85,12 @@ public class SchoolRestController {
     /*                              POST REQUESTS                                 */
     /* ************************************************************************** */
 
-    @PostMapping("/create")
-    public ResponseEntity<School> createSchool(@RequestBody School_Request_DTO request)
-    {
-        School sch = schoolService.addSchool(request);
-
-        if (sch == null)
-            return ResponseEntity.notFound().build();
-        
-        return ResponseEntity.ok(sch);
-    }
+        @PostMapping
+        public ResponseEntity<School_Response_DTO> createSchool(@Valid  @RequestBody School_Request_DTO request)
+        {
+            School sch = schoolService.addSchool(request);
+            return ResponseEntity.ok(School_Response_DTO.ToSchoolResponseDTO(sch));
+        }
     // @PostMapping("/create/{school_id}/student")
     // public ResponseEntity<Student_Response_DTO> addStudent(@RequestBody Student_Request_DTO request , @PathVariable Long school_id)
     // {
@@ -112,13 +105,11 @@ public class SchoolRestController {
     /* ************************************************************************** */
 
 
-    @PutMapping("/update/{school_id}")
-    public ResponseEntity<School>  updateSchool(@PathVariable Long school_id, @RequestBody School_Request_DTO request)
+    @PutMapping("/{school_id}")
+    public ResponseEntity<School_Response_DTO>  updateSchool(@PathVariable @Positive Long school_id, @Valid @RequestBody School_Request_DTO request)
     {
         School sch = schoolService.UpdateSchool(school_id, request);
-        if (sch == null)
-            return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(sch);
+        return ResponseEntity.ok(School_Response_DTO.ToSchoolResponseDTO(sch));
     }
 
     // @PutMapping("/update/{school_id}/{student_id}")
@@ -136,8 +127,8 @@ public class SchoolRestController {
     /* ************************************************************************** */
 
 
-    @DeleteMapping("/delete/{school_id}")
-    public ResponseEntity<Void> deleteSchool(@PathVariable Long school_id)
+    @DeleteMapping("/{school_id}")
+    public ResponseEntity<Void> deleteSchool(@PathVariable @Positive Long school_id)
     {
         Boolean succes = schoolService.DeleteSchool(school_id);
         if (!succes)
