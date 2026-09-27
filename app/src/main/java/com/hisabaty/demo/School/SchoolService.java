@@ -79,7 +79,7 @@ public class SchoolService {
 
     public School addSchool(School_Request_DTO request)
     {
-        boolean exist = schoolRepository.findByNameAndProvince(request.getName(), request.getProvince());
+        boolean exist = schoolRepository.existsByNameIgnoreCaseAndProvinceIgnoreCase(request.getName(), request.getProvince());
         if (exist)
             throw new ValueAlreadyExist("School already exists");
         School sch = new School();

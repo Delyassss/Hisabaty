@@ -52,7 +52,7 @@ public class Student
 
     @ManyToOne(fetch = FetchType.LAZY) //fetch lazy is to not load the school when loading the student
     @JoinColumn(name = "school_entity", nullable = false) // Hibernate now can target the exact column name (school_entity)
-    private School school;
+    private School school = new School();
 
     @NotBlank(message = "Name is required")
     private String name;

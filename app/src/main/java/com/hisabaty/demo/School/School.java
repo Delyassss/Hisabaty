@@ -1,5 +1,6 @@
 package com.hisabaty.demo.School;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.SQLDelete;
@@ -36,14 +37,14 @@ import com.hisabaty.demo.Student.Student;
 @SQLDelete(sql = "UPDATE students SET deleted = true Where id = ?")
 @SQLRestriction("deleted = false")
 
-public class School
+public class    School
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
     @OneToMany(mappedBy = "school", fetch = FetchType.EAGER) // the mappedBy basically to point to the student 
-    private List<Student> students; // the OneToMany use fetch LAZY by default
+    private List<Student> students  = new ArrayList<>(); // the OneToMany use fetch LAZY by default
 
     @Column(nullable = false)
     @NotBlank(message = "Name is required")

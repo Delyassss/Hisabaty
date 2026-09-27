@@ -66,7 +66,7 @@ public class StudentRestController
     /*                              GET REQUESTS                                 */
     /* ************************************************************************** */
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<Page<Student_Response_DTO>> getStudentsBySchool( @Positive @PathVariable Long schoolId, Pageable pg)
     {
        Page<Student_Response_DTO> students = studentService.getStudentsBySchool(schoolId, pg);

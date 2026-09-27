@@ -21,6 +21,7 @@ public class School_Response_DTO
     private String email;
     private String city;
     private Boolean state;
+    private String province;
     private Integer practiceDaysPerWeek;
     private List<String> licenseAvailable;
     private Integer studentCount;
@@ -28,10 +29,11 @@ public class School_Response_DTO
 
 
 
-    public static School_Response_DTO ToSchoolResponseDTO   (School sc)
+    public static School_Response_DTO ToSchoolResponseDTO(School sc)
     {
         School_Response_DTO responseDTO = new School_Response_DTO();
         responseDTO.setId(sc.getId());
+        responseDTO.setProvince(sc.getProvince());
         responseDTO.setName(sc.getName());
         responseDTO.setAddress(sc.getAddress());
         responseDTO.setPhone(sc.getPhone());

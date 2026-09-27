@@ -29,4 +29,6 @@ public class Student_Response_DTO
     private LocalDate countdownDeadline;
     private AttendanceStatus attendanceStatus;
     private Status status;
+    private String province;
+    
 }
