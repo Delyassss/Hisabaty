@@ -28,6 +28,9 @@ public class School_Request_DTO
     @NotNull(message = "State is required")
     private Boolean state;
 
+    @NotBlank(message = "Province is required")
+    private String province;
+
     private List<Student> students;
 
 

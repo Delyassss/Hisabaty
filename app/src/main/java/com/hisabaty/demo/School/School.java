@@ -65,6 +65,11 @@ public class School
     @NotBlank(message = "City is required")
         private String city;
 
+    // add Province 
+    @Column(name = "province", nullable = false)
+    @NotBlank(message = "Province is required")
+        private String province;
+
     @Column(nullable = false)
     @NotNull(message = "State is required") 
         private Boolean state = true;

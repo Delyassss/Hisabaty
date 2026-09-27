@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
+import com.hisabaty.demo.ValueAlreadyExist;
 import com.hisabaty.demo.Student.*;
 import org.springframework.util.StringUtils;
 
@@ -78,13 +79,13 @@ public class SchoolService {
 
     public School addSchool(School_Request_DTO request)
     {
-        Optional<School> sch = schoolRepository.getSchoolByName(request.getName()); //  we need another method to check if the school with the same name exist in the STATE
-
-        if (sch != null && !sch.isEmpty())
-            return sch.get();
+        boolean exist = schoolRepository.findByNameAndProvince(request.getName(), request.getProvince());
+        if (exist)
+            throw new ValueAlreadyExist("School already exists");
+        School sch = new School();
 
         sch = settersSchool(request, sch);
-        return schoolRepository.save(sch.get());
+        return schoolRepository.save(sch);
    
     }
 
@@ -101,15 +102,12 @@ public class SchoolService {
     /* ************************************************************************** */
 
 
-    public School UpdateSchool(Long schoolId, School_Request_DTO request) {
-        Optional<School> sch = schoolRepository.findById(schoolId);
-
-        if (request == null)
-            return sch.get();
-
+    public School UpdateSchool(Long schoolId, School_Request_DTO request)
+    {
+        School sch = schoolRepository.findById(schoolId).orElseThrow(() -> new SchoolNotFound(schoolId));
         sch = settersSchool(request, sch);
 
-        return schoolRepository.save(sch.get());
+        return schoolRepository.save(sch);
     }
 
     public Student UpdateStudent(Long schoolId, Long student_id, Student_Request_DTO request)
@@ -168,31 +166,33 @@ public class SchoolService {
 
 
     // UTILS
-    public Optional<School> settersSchool(School_Request_DTO request , Optional<School> sch)
+    public School settersSchool(School_Request_DTO request , School sch)
     {
         if (request == null)
             return sch;
-        if (sch ==   null)
+        if (sch == null)
             return null;
         if (StringUtils.hasText(request.getName()))
-            sch.get().setName(request.getName());
+            sch.setName(request.getName());
         if (StringUtils.hasText(request.getAddress()))
-            sch.get().setAddress(request.getAddress());
+            sch.setAddress(request.getAddress());
         if (StringUtils.hasText(request.getPhone()))
-            sch.get().setPhone(request.getPhone());
+            sch.setPhone(request.getPhone());
         if (StringUtils.hasText(request.getEmail()))
-            sch.get().setEmail(request.getEmail());
+            sch.setEmail(request.getEmail());
         if (!request.getLicenseAvailable().isEmpty() && request.getLicenseAvailable() != null)
-            sch.get().setLicenseAvailable(request.getLicenseAvailable());
-        sch.get().setPracticeDaysPerWeek(request.getPracticeDaysPerWeek());
+            sch.setLicenseAvailable(request.getLicenseAvailable());
+        sch.setPracticeDaysPerWeek(request.getPracticeDaysPerWeek());
         if (request.getState() != null)
-            sch.get().setState(request.getState());
+            sch.setState(request.getState());
         if (StringUtils.hasText(request.getCity()))
-            sch.get().setCity(request.getCity());
+            sch.setCity(request.getCity());
         if (request.getStudents() != null && !request.getStudents().isEmpty()) // here the school may reser its Own student list to zero just like delete so i forced it to just ignore an null Value or empty List
-            sch.get().setStudents(request.getStudents());
+            sch.setStudents(request.getStudents());
         if (request.getStudentCount() != null)
-            sch.get().setStudentCount(request.getStudentCount());
+            sch.setStudentCount(request.getStudentCount());
+        if (request.getProvince() != null)
+            sch.setProvince(request.getProvince());
         return sch;
     }
 

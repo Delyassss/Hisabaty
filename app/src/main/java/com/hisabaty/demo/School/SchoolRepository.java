@@ -19,4 +19,6 @@ public interface SchoolRepository extends JpaRepository<School, Long>
 
     Optional<School> getSchoolByName(String name);
 
+    boolean findByNameAndProvince(String name, String province);
+
 }
