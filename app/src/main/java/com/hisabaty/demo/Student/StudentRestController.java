@@ -51,7 +51,16 @@ public class StudentRestController
         String msg = Attended ? "Attendance recorded as present!" : "Attendance recorded as absent!";
         return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
+    
+    // GET ALL STUDENTS -- I changed it to POST for the filters 
+    @PostMapping("/filter")
+    public ResponseEntity<Page<Student_Response_DTO>> getStudentsByfilter(@Valid @RequestBody Student_Request_DTO request, @Positive @PathVariable Long schoolId, Pageable pg)
+    {
+        Page<Student_Response_DTO>  stds = studentService.getStudentDynamically(request, schoolId, pg);
+            
+        return ResponseEntity.ok(stds);
 
+    }
 
     /* ************************************************************************** */
     /*                              GET REQUESTS                                 */
@@ -74,15 +83,6 @@ public class StudentRestController
     }
     
 
-    // GET ALL STUDENTS
-    @GetMapping("/filter")
-    public ResponseEntity<Page<Student_Response_DTO>> getStudentsByfilter(@Valid @RequestBody Student_Request_DTO request, @Positive @PathVariable Long schoolId, Pageable pg)
-    {
-        Page<Student_Response_DTO>  stds = studentService.getStudentDynamically(request, schoolId, pg);
-            
-        return ResponseEntity.ok(stds);
-
-    }
 
     /* ************************************************************************* */
     /*                              PUT REQUESTS                                 */
