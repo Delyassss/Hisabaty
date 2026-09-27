@@ -47,7 +47,7 @@ enum AttendanceStatus
 public class Student
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // starting from 1
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY) //fetch lazy is to not load the school when loading the student

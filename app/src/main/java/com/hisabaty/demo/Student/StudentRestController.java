@@ -1,6 +1,7 @@
 package com.hisabaty.demo.Student;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -19,6 +21,7 @@ import org.apache.catalina.connector.Response;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/schools/{schoolId}/students")
+@Validated 
 public class StudentRestController
 {
     private final StudentService studentService;
@@ -28,7 +31,7 @@ public class StudentRestController
     /*                              POST REQUESTS                                 */
     /* ************************************************************************** */
 
-    @PostMapping("/add-student")
+    @PostMapping
     public ResponseEntity<Student_Response_DTO> addStudent(@Valid @RequestBody Student_Request_DTO student,
                                               @RequestParam Long schoolID)
     {
@@ -38,7 +41,7 @@ public class StudentRestController
 
     // When they click "Yes", your frontend code silently sends the POST request to /api/students/{id}/consume-practice
     @PostMapping("/{studentId}/attendance")
-    public ResponseEntity<String> recordAttendance(@PathVariable("studentId") Long id,
+    public ResponseEntity<String> recordAttendance(@Positive @PathVariable("studentId") Long id,
                                                    @RequestParam(required = false) Boolean Attended)
     {
         if (id < 0)
@@ -55,43 +58,27 @@ public class StudentRestController
     /* ************************************************************************** */
 
     @GetMapping("/all")
-    public ResponseEntity<Page<Student_Response_DTO>> getStudentsBySchool(@PathVariable Long schoolId, Pageable pg)
+    public ResponseEntity<Page<Student_Response_DTO>> getStudentsBySchool( @Positive @PathVariable Long schoolId, Pageable pg)
     {
-        if (schoolId < 0)
-            return ResponseEntity.badRequest().build();
-            
        Page<Student_Response_DTO> students = studentService.getStudentsBySchool(schoolId, pg);
-       if (students == null)
-            return ResponseEntity.notFound().build();
-        if (students.isEmpty())
-            return ResponseEntity.noContent().build();
-
+     
         return ResponseEntity.ok(students);
     }
 
 
     @GetMapping("/{studentId}")
-    public ResponseEntity<Student_Response_DTO> getStudentbyId(@PathVariable("studentId") Long id, Pageable pg)
+    public ResponseEntity<Student_Response_DTO> getStudentbyId(@Positive @PathVariable("studentId") Long id, Pageable pg)
     {
-        if (id < 0)
-            return ResponseEntity.badRequest().build();
         Student_Response_DTO std = studentService.getStudentById(id, pg);
-        if (std == null)
-            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(std);
     }
     
 
     // GET ALL STUDENTS
     @GetMapping("/filter")
-    public ResponseEntity<Page<Student_Response_DTO>> getStudentsByfilter(@Valid @RequestBody Student_Request_DTO request, @PathVariable Long schoolId, Pageable pg)
+    public ResponseEntity<Page<Student_Response_DTO>> getStudentsByfilter(@Valid @RequestBody Student_Request_DTO request, @Positive @PathVariable Long schoolId, Pageable pg)
     {
-        if (request.getSchoolId() < 0)
-            return  ResponseEntity.badRequest().build();
-
         Page<Student_Response_DTO>  stds = studentService.getStudentDynamically(request, schoolId, pg);
-        if (stds.isEmpty())
-            return  ResponseEntity.notFound().build();
             
         return ResponseEntity.ok(stds);
 

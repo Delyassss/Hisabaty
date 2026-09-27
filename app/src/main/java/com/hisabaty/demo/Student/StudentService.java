@@ -79,16 +79,14 @@ public class StudentService {
         // Spring Data JPA automatically writes the SELECT * FROM students WHERE school_id = ?
         Optional<Page<Student>> stds = studentRepo.findBySchoolId(schoolId, pageable);
         if (stds.isEmpty())
-            return null;
+            throw (new StudentNotFound("No students found for the given school id!"));
         
         return stds.get().map(student -> convertToStudentResponseDTO(student));
     }
 
     public Student_Response_DTO getStudentById(Long id, Pageable pageable) 
     {
-        Student student = studentRepo.findById(id).orElse(null);
-        if (student == null)
-            return null;
+        Student student = studentRepo.findById(id).orElseThrow(() -> new StudentNotFound("Student [id : " + id + "] is not found!"));
         return convertToStudentResponseDTO(student);
     } 
 

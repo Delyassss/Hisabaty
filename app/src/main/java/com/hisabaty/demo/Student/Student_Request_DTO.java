@@ -1,6 +1,7 @@
 package com.hisabaty.demo.Student;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import jakarta.validation.constraints.Pattern;
@@ -14,6 +15,7 @@ public class Student_Request_DTO
 
 
     @NotNull(message = "School ID is required")
+    @Min(value = 1 , message = "ID must be positive")
     private Long schoolId; // SaaS Rule: Always know which tenant this belongs to!
     
     @NotBlank(message = "Name is required")

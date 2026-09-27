@@ -7,12 +7,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 public class StudentNotFound extends RuntimeException
 {
-        public StudentNotFound(String cin)
+        public StudentNotFound(String cin , Long id )
         {
-            super("Error: Student [CIN : " + cin + " ] not found.");
+            super("Error: Student [" + id + "] [CIN : " + cin + " ] not found.");
         }
-        public StudentNotFound()
+         public StudentNotFound()
         {
             super("Error: Students not found.");
+        }
+        public StudentNotFound(String msg)
+        {
+            super(msg);
         }
 }
