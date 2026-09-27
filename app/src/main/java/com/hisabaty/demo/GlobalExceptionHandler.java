@@ -32,14 +32,14 @@ public class GlobalExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, String>> handleInvalidArgumentException(IllegalArgumentException ex)
     {
-        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
+        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("InvalidArgumentException", ex.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex)
     {
-        return  ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(Map.of("error", ex.getMessage()));
+        return  ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(Map.of("RuntimeException", ex.getMessage()));
     }
 
     @ExceptionHandler(SchoolNotFound.class)

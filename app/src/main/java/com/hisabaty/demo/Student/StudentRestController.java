@@ -33,9 +33,9 @@ public class StudentRestController
 
     @PostMapping
     public ResponseEntity<Student_Response_DTO> addStudent(@Valid @RequestBody Student_Request_DTO student,
-                                              @RequestParam Long schoolID)
+                                              @Positive @PathVariable Long schoolId)
     {
-        Student std = studentService.createStudent(student, schoolID);
+        Student std = studentService.createStudent(student, schoolId);
         return ResponseEntity.status(HttpStatus.CREATED).body(studentService.convertToStudentResponseDTO(std));
     }
 
@@ -44,9 +44,6 @@ public class StudentRestController
     public ResponseEntity<String> recordAttendance(@Positive @PathVariable("studentId") Long id,
                                                    @RequestParam(required = false) Boolean Attended)
     {
-        if (id < 0)
-            throw new IllegalArgumentException("Invalid student id!");
-
         studentService.AttendingCheck(id, Attended);
         String msg = Attended ? "Attendance recorded as present!" : "Attendance recorded as absent!";
         return ResponseEntity.status(HttpStatus.OK).body(msg);

@@ -41,33 +41,31 @@ public class StudentService {
         if (student == null || schoolId < 0) {
             throw (new IllegalArgumentException("Invalid student or school id!"));
         }
-        School school = schoolRepo.findById(schoolId).orElseThrow(() -> new SchoolNotFound(schoolId));
-        Optional<Student> newStudent = studentRepo.findByCin(student.getCin());
-        if (newStudent.isPresent()) // isPresent is a method that checks if the optional is empty or not 
-        {
-            throw (new ValueAlreadyExist("Error: Student [Cin :  " + student.getCin() + " ] is already registered!"));
-        }
-
-        newStudent.get().setName(student.getName());
-        newStudent.get().setCin(student.getCin());
-        newStudent.get().setSchool(school);
-        newStudent.get().setPhone(student.getPhone());
+        School school = schoolRepo.findById(schoolId).orElseThrow(() -> new SchoolNotFound("School with ID " + schoolId + " not found. Please create it first."));
+        if (studentRepo.existsByCinIgnoreCase(student.getCin()))
+            throw new ValueAlreadyExist("Error: Student [Cin :  " + student.getCin() + " ] is already registered!");
+    
+        Student newStudent = new Student();
+        newStudent.setName(student.getName());
+        newStudent.setCin(student.getCin());
+        newStudent.setSchool(school);
+        newStudent.setPhone(student.getPhone());
 
         if (student.getAlreadyPassedCode()) {
-            newStudent.get().setStatus(Status.PRACTICAL_TRAINING); 
+            newStudent.setStatus(Status.PRACTICAL_TRAINING); 
         }else {
-            newStudent.get().setStatus(Status.THEORY_TRAINING);
+            newStudent.setStatus(Status.THEORY_TRAINING);
         }
 
         if (!school.getLicenseAvailable().contains(student.getTypeOfLicense())) 
             throw (new IllegalArgumentException("Error: School does not offer this type of license!"));
     
-        newStudent.get().setTypeOfLicense(student.getTypeOfLicense());
-        newStudent.get().setEmail(student.getEmail());
-        newStudent.get().setRemainingDaysPerWeek(school.getPracticeDaysPerWeek());
+        newStudent.setTypeOfLicense(student.getTypeOfLicense());
+        newStudent.setEmail(student.getEmail());
+        newStudent.setRemainingDaysPerWeek(school.getPracticeDaysPerWeek());
         school.setStudentCount(school.getStudentCount() + 1);
 
-        return studentRepo.save(newStudent.get());
+        return studentRepo.save(newStudent);
     }
 
     /* ************************************************************************** */
@@ -245,6 +243,8 @@ public class StudentService {
             return null;
         }
         Student_Response_DTO std = new Student_Response_DTO();
+        
+        std.setId(student.getId());
         std.setName(student.getName());
         std.setCin(student.getCin());
         std.setEmail(student.getEmail());

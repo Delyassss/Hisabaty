@@ -14,6 +14,10 @@ public class SchoolNotFound extends RuntimeException
     {
         super("School not found with id : " + id); 
     }
+    public SchoolNotFound(String msg)
+    {
+        super(msg); 
+    }
     
     public static ResponseEntity<String>  WebPage(String name)
     {

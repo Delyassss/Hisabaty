@@ -21,4 +21,6 @@ public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpec
     // Added from JpaSpecificationExecutor (you don't need to write anything for this)
     @Override // we add it just to override the method according to our needs
     Page<Student> findAll(Specification<Student> spec, Pageable pageable);
+    
+    boolean existsByCinIgnoreCase(String cin);
 }
