@@ -59,6 +59,7 @@ public class    School
         private String phone;
 
     @Column(unique = true, nullable = false)
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Invalid email address")
     @NotBlank(message = "Email is required")
         private String email;
 

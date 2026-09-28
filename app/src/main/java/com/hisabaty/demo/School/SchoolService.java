@@ -79,12 +79,12 @@ public class SchoolService {
 
     public School addSchool(School_Request_DTO request)
     {
-        boolean exist = schoolRepository.existsByNameIgnoreCaseAndProvinceIgnoreCase(request.getName(), request.getProvince());
-        if (exist)
+        Optional<School> exist = schoolRepository.findByNameIgnoreCaseAndProvinceIgnoreCase(request.getName(), request.getProvince());
+        if (exist.isPresent())
             throw new ValueAlreadyExist("School already exists");
         School sch = new School();
 
-        sch = settersSchool(request, sch, false);
+        sch = settersSchool(request, sch);
         return schoolRepository.save(sch);
    
     }
@@ -140,6 +140,16 @@ public class SchoolService {
         return true;
     }
 
+    /* ************************************************************************** */
+    /*                              PATCH REQUESTS                               */
+    /* ************************************************************************** */
+    public School PatchSchool(Long school_id, School_Patch_Request_DTO request)
+    {
+        School sch = schoolRepository.findById(school_id).orElseThrow(() -> new SchoolNotFound(school_id));
+        sch = applyPartialUpdates(request, sch);
+        return schoolRepository.save(sch);
+    }
+
 
 
 
@@ -170,6 +180,7 @@ public class SchoolService {
 
 
     // UTILS
+
     public School settersSchool(School_Request_DTO request , School sch)
     {
         if (request == null)
@@ -199,6 +210,27 @@ public class SchoolService {
             sch.setProvince(request.getProvince());
         return sch;
     }
+    
+    private School applyPartialUpdates(School_Patch_Request_DTO request, School sch) {
+    
+    if (request.getName() != null) {
+        sch.setName(request.getName());
+    }
+    
+    if (request.getProvince() != null) {
+        sch.setProvince(request.getProvince());
+    }
+    
+    if (request.getEmail() != null) {
+        sch.setEmail(request.getEmail());
+    }
+    
+    if (request.getPracticeDaysPerWeek() != null) {
+        sch.setPracticeDaysPerWeek(request.getPracticeDaysPerWeek());
+    }
+    
+    return sch;
+}
 
 }
 

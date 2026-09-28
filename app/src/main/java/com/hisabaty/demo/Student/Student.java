@@ -57,7 +57,8 @@ public class Student
     @NotBlank(message = "Name is required")
     private String name;
 
-    @Column(name = "email", unique = true, length = 100)
+    @Column(unique = true, length = 100)
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Invalid email address")
     @NotBlank(message = "Email is required")
     private String email;
 

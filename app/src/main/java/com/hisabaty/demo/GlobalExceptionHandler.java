@@ -11,6 +11,7 @@ import jakarta.validation.ConstraintViolationException;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -101,8 +102,39 @@ public class GlobalExceptionHandler
        
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Map<String,String>> handleDataIntegrityViolationException(DataIntegrityViolationException ex)
+    {
+        Map<String,String> errors = new HashMap<>();
+        
+        String rootMsg = ex.getRootCause().getMessage();
+        if (rootMsg == null)
+        {
+            rootMsg = ex.getMostSpecificCause().getMessage();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", rootMsg));
+        }
+        String causeMsg = "A database conflict occurred: A unique value already exists.";
 
-    
+        errors.put("error", "Conflict occurred : " + rootMsg);
+        errors.put("cause", causeMsg);
 
-    
+        if (rootMsg.contains("email"))              
+        {
+            causeMsg = "Email already exists";
+            errors.put("Details", causeMsg);
+        }
+        if (rootMsg.contains("phone"))
+        {
+            causeMsg = "Phone number already exists";
+            errors.put("Details", causeMsg);
+        }
+        if (rootMsg.contains(" cin "))
+        {
+            causeMsg = "CIN already exists";
+            errors.put("Details", causeMsg);
+        }
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
+    }
 }

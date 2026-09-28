@@ -143,6 +143,17 @@ public class SchoolRestController {
     //     return ResponseEntity.noContent().build();
     // }
 
+    /* ************************************************************************** */
+    /*                              PATCH REQUESTS                               */
+    /* ************************************************************************** */
+
+    @PatchMapping("/{school_id}")
+    public ResponseEntity<School_Response_DTO> updateSchool(@PathVariable @Positive Long school_id, @Valid @RequestBody School_Patch_Request_DTO request)
+    {
+        School sch = schoolService.PatchSchool(school_id, request);
+        return ResponseEntity.ok(School_Response_DTO.ToSchoolResponseDTO(sch));
+    }
+
 
 
 
@@ -151,4 +162,26 @@ public class SchoolRestController {
 
 
 }  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
