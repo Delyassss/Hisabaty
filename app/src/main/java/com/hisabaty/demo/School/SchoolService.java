@@ -146,6 +146,11 @@ public class SchoolService {
     public School PatchSchool(Long school_id, School_Patch_Request_DTO request)
     {
         School sch = schoolRepository.findById(school_id).orElseThrow(() -> new SchoolNotFound(school_id));
+
+        Optional<School> exist = schoolRepository.findByNameIgnoreCaseAndProvinceIgnoreCase(request.getName(), request.getProvince());
+        if (exist.isPresent() && !exist.get().getId().equals(school_id))
+            throw new ValueAlreadyExist("A school with this name and province already exists.");
+        
         sch = applyPartialUpdates(request, sch);
         return schoolRepository.save(sch);
     }
@@ -197,7 +202,8 @@ public class SchoolService {
             sch.setEmail(request.getEmail());
         if (!request.getLicenseAvailable().isEmpty() && request.getLicenseAvailable() != null)
             sch.setLicenseAvailable(request.getLicenseAvailable());
-        sch.setPracticeDaysPerWeek(request.getPracticeDaysPerWeek());
+        if (request.getPracticeDaysPerWeek() != null && request.getPracticeDaysPerWeek() > 0 && request.getPracticeDaysPerWeek() <= 7)
+            sch.setPracticeDaysPerWeek(request.getPracticeDaysPerWeek());
         if (request.getState() != null)
             sch.setState(request.getState());
         if (StringUtils.hasText(request.getCity()))
@@ -210,22 +216,22 @@ public class SchoolService {
             sch.setProvince(request.getProvince());
         return sch;
     }
-    
+
     private School applyPartialUpdates(School_Patch_Request_DTO request, School sch) {
     
-    if (request.getName() != null) {
+    if (StringUtils.hasText(request.getName())) {
         sch.setName(request.getName());
     }
     
-    if (request.getProvince() != null) {
+    if (StringUtils.hasText(request.getProvince())) {
         sch.setProvince(request.getProvince());
     }
     
-    if (request.getEmail() != null) {
+    if (StringUtils.hasText(request.getEmail())) {
         sch.setEmail(request.getEmail());
     }
     
-    if (request.getPracticeDaysPerWeek() != null) {
+    if (request.getPracticeDaysPerWeek() != null && request.getPracticeDaysPerWeek() > 0 && request.getPracticeDaysPerWeek() <= 7) {
         sch.setPracticeDaysPerWeek(request.getPracticeDaysPerWeek());
     }
     

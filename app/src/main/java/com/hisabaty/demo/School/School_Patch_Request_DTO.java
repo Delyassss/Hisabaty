@@ -1,16 +1,26 @@
 package com.hisabaty.demo.School;
 
+import java.util.List;
+
+import com.hisabaty.demo.Student.Student;
+
+import jakarta.validation.constraints.Min;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter 
+@Setter
 
 public class School_Patch_Request_DTO
 {
   
-    @NotBlank(message = "Name is required")
     private String name;
 
-    @NotBlank(message = "Address is required")
     private String address;
 
-    @NotBlank(message = "Phone is required")
     private String phone;
 
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Invalid email address")
