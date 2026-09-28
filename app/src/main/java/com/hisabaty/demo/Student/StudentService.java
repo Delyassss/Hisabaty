@@ -105,16 +105,13 @@ public class StudentService {
     /* ************************************************************************** */
 
     
-        public Optional<Student> UpdateStudent(Long id , Student_Request_DTO req)
+        public Student UpdateStudent(Long id , Student_Request_DTO req)
         {
-           Optional<Student> std = studentRepo.findById(id);
-           if (std.isEmpty())
-                  return Optional.empty();
+           Student std = studentRepo.findById(id).orElseThrow(() -> new StudentNotFound(id));
 
-                std = setterStudents(std , req);
+            std = setterStudents(std , req);
 
-                studentRepo.save(std.get());
-                return  std;
+            return studentRepo.save(std);
         }
 
 
@@ -266,34 +263,34 @@ public class StudentService {
         return std;
     }
 
-    public static Optional<Student> setterStudents(Optional<Student> std , Student_Request_DTO request)
+    public static Student setterStudents(Student std , Student_Request_DTO request)
     {
         if (request == null || std == null)
             return null;
 
         if (StringUtils.hasText(request.getName()))
-            std.get().setName(request.getName());
+            std.setName(request.getName());
         
         if(StringUtils.hasText(request.getCin()))
-            std.get().setCin(request.getCin());
+            std.setCin(request.getCin());
         
         if(StringUtils.hasText(request.getEmail()))
-            std.get().setEmail(request.getEmail());
+            std.setEmail(request.getEmail());
         
         if(StringUtils.hasText(request.getPhone()))
-            std.get().setPhone(request.getPhone());
+            std.setPhone(request.getPhone());
         
         if(request.getTypeOfLicense() != null)
-            std.get().setTypeOfLicense(request.getTypeOfLicense());
+            std.setTypeOfLicense(request.getTypeOfLicense());
         
         if(request.getAlreadyPassedCode() != null)
-            std.get().setAlreadyPassedCode(request.getAlreadyPassedCode());
+            std.setAlreadyPassedCode(request.getAlreadyPassedCode());
         
         if(request.getAdvancePayment() != null)
-            std.get().setAdvancePayment(request.getAdvancePayment());
+            std.setAdvancePayment(request.getAdvancePayment());
         
         if(request.getRemainingPayment() != null)
-            std.get().setRemainingPayment(request.getRemainingPayment());
+            std.setRemainingPayment(request.getRemainingPayment());
         
         // if(request.getSchoolId() != null) // ---> can shcools set their own student to schools?
         //     std.setSchoolId(request.getSchoolId());

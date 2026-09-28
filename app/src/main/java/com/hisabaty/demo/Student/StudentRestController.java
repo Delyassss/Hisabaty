@@ -87,15 +87,11 @@ public class StudentRestController
 
 
     @PutMapping("/update/{student_id}")
-    ResponseEntity<Student> UpdateStudent(@PathVariable("student_id") Long id, @Valid @RequestBody Student_Request_DTO request)
+    ResponseEntity<Student_Response_DTO> UpdateStudent(@PathVariable("student_id") Long id, @Valid @RequestBody Student_Request_DTO request)
     {
-        Optional<Student> std = studentService.UpdateStudent(id , request);
+        Student std = studentService.UpdateStudent(id , request);
 
-        if (std == null)
-            return ResponseEntity.badRequest().build();
-        if (std.isEmpty())
-            return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(std.get());
+        return ResponseEntity.ok(studentService.convertToStudentResponseDTO(std));
     }
 
 

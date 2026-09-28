@@ -11,6 +11,10 @@ public class StudentNotFound extends RuntimeException
         {
             super("Error: Student [" + id + "] [CIN : " + cin + " ] not found.");
         }
+        public StudentNotFound(Long id)
+        {
+            super("Error: Student [" + id + " ] not found.");
+        }
          public StudentNotFound()
         {
             super("Error: Students not found.");

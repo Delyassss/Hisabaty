@@ -19,6 +19,6 @@ public interface SchoolRepository extends JpaRepository<School, Long>
 
     Optional<School> getSchoolByName(String name);
 
-    boolean existsByNameIgnoreCaseAndProvinceIgnoreCase(String name, String province);
+    Optional<School> findByNameIgnoreCaseAndProvinceIgnoreCase(String name, String province);
 
 }

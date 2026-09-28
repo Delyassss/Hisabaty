@@ -84,7 +84,7 @@ public class SchoolService {
             throw new ValueAlreadyExist("School already exists");
         School sch = new School();
 
-        sch = settersSchool(request, sch);
+        sch = settersSchool(request, sch, false);
         return schoolRepository.save(sch);
    
     }
@@ -105,6 +105,14 @@ public class SchoolService {
     public School UpdateSchool(Long schoolId, School_Request_DTO request)
     {
         School sch = schoolRepository.findById(schoolId).orElseThrow(() -> new SchoolNotFound(schoolId));
+        String name = request.getName();
+        String province = request.getProvince();
+                if (StringUtils.hasText(name) && StringUtils.hasText(province))
+        {
+            Optional<School> exist = schoolRepository.findByNameIgnoreCaseAndProvinceIgnoreCase(request.getName(), request.getProvince());
+            if (exist.isPresent() && !exist.get().getId().equals(schoolId))
+                throw new ValueAlreadyExist("A school with this name and province already exists.");
+        }
         sch = settersSchool(request, sch);
 
         return schoolRepository.save(sch);
@@ -112,14 +120,11 @@ public class SchoolService {
 
     public Student UpdateStudent(Long schoolId, Long student_id, Student_Request_DTO request)
     {
-        Optional<Student> std = studentRepo.findById(student_id);
-        if (std == null || std.isEmpty())
-            return null;
+        Student std = studentRepo.findById(student_id).orElseThrow(() -> new StudentNotFound(student_id));
 
         std = studentService.UpdateStudent(student_id , request);
-        if (std == null || std.isEmpty())
-            return null;
-        return std.get();
+         
+        return std;
     }
 
 
@@ -129,10 +134,9 @@ public class SchoolService {
 
     public Boolean DeleteSchool(Long school_id)
     {
-        Optional<School> sch = schoolRepository.findById(school_id);
-        if (sch == null || sch.isEmpty())
-            return false;
-        schoolRepository.delete(sch.get());
+        School sch = schoolRepository.findById(school_id).orElseThrow(() -> new SchoolNotFound(school_id)); //orElseThrow() is programmed to accept a specific Java interface called a Supplier. A Supplier is simply a function that takes zero inputs () and returns an object.
+        
+        schoolRepository.delete(sch);
         return true;
     }
 
@@ -191,7 +195,7 @@ public class SchoolService {
             sch.setStudents(request.getStudents());
         if (request.getStudentCount() != null)
             sch.setStudentCount(request.getStudentCount());
-        if (request.getProvince() != null)
+        if (StringUtils.hasText(request.getProvince()))
             sch.setProvince(request.getProvince());
         return sch;
     }
