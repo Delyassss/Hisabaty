@@ -5,6 +5,10 @@ import com.hisabaty.demo.ValueAlreadyExist;
 import com.hisabaty.demo.School.School;
 import com.hisabaty.demo.School.SchoolRepository;
 import com.hisabaty.demo.Student.Student_Request_DTO;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+
 import com.hisabaty.demo.Student.StudentRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -108,12 +112,12 @@ public class StudentService {
         public Student UpdateStudent(Long id , Student_Request_DTO req)
         {
            Student std = studentRepo.findById(id).orElseThrow(() -> new StudentNotFound(id));
-
-            std = setterStudents(std , req);
-
+           
+           std = setterStudents(std , req);
+           
             return studentRepo.save(std);
         }
-
+        
 
 
 
@@ -132,11 +136,18 @@ public class StudentService {
         studentRepo.delete(std.get());
         return true;
     }
+    
+    
+    
+    /* ************************************************************************** */
+    /*                              DELETE REQUESTS                               */
+    /* ************************************************************************** */
 
-
-
-
-
+    public Student PatchStudent(Long studentId, Student_Patch_Request_DTO request)
+    {
+        Student std = studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFound(studentId));
+        setterStudents(std, null)
+    }
 
 
 
@@ -197,10 +208,10 @@ public class StudentService {
         studentRepo.save(student);
         return Attended;
     }
-
-
-
-
+    
+    
+    
+    
 
 
 
@@ -225,7 +236,7 @@ public class StudentService {
         std.setSchoolId(student.getSchool().getId());
         return std;
     }
-
+    
     public static Page<Student_Request_DTO> ToStudentRequestDTO(Page<Student> student) {
         if (student == null) {
             return null;
@@ -297,6 +308,10 @@ public class StudentService {
 
         return std;
     }
+
+    
+
+
 
 
 }

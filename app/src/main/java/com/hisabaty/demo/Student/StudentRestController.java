@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.catalina.connector.Response;
@@ -87,7 +88,7 @@ public class StudentRestController
 
 
     @PutMapping("/update/{student_id}")
-    ResponseEntity<Student_Response_DTO> UpdateStudent(@PathVariable("student_id") Long id, @Valid @RequestBody Student_Request_DTO request)
+    ResponseEntity<Student_Response_DTO> UpdateStudent(@PathVariable("student_id") @Positive Long id, @Valid @RequestBody Student_Request_DTO request)
     {
         Student std = studentService.UpdateStudent(id , request);
 
@@ -100,16 +101,28 @@ public class StudentRestController
     /* ************************************************************************** */
     
     @DeleteMapping("/delete/{studentId}")
-    ResponseEntity<Void> DeleteStudent(@PathVariable Long studentId)
+    ResponseEntity<Map<String, String>> DeleteStudent(@PathVariable @Positive Long studentId)
     {
-        if (studentId < 0)
-            return ResponseEntity.badRequest().build();
+        
         Boolean succes = studentService.DeleteStudent(studentId);
         if (!succes)
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Student not found"));
         
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Student deleted successfully"));
     }
+
+    /* ************************************************************************** */
+    /*                              PATCH REQUESTS                                 */
+    /* ************************************************************************** */
+    
+    @PatchMapping("/{studentId}")
+    ResponseEntity<Student_Response_DTO> PatchStudent(@PathVariable @Positive Long studentId, @Valid @RequestBody Student_Patch_Request_DTO request)
+    {
+        Student std = studentService.PatchStudent(studentId, request);
+        return ResponseEntity.ok(studentService.convertToStudentResponseDTO(std));
+    }
+
+
 
 
 
