@@ -3,6 +3,9 @@ package com.hisabaty.demo.Student;
 import com.hisabaty.demo.School.School;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.Getter;
@@ -86,6 +89,8 @@ public class Student
     @Column(name = "status")
     private Status status = Status.THEORY_TRAINING;
 
+    @Min(value = 1 , message = "Min is 1")
+    @Max(value = 7 , message = "Max i 7")
     private Integer remainingDaysPerWeek ; // track days attendance per week
 
     // Modern Java Date types
@@ -93,10 +98,13 @@ public class Student
     @Column(updatable = false) // updatable=false means this value cannot be changed after it is created
      private LocalDateTime createdAt;
 
+     @FutureOrPresent(message = "Exam date must be a from now on ")
     private LocalDateTime lastTrainingDate;
+    @FutureOrPresent(message = "Next Training Date must be a from now on ")
     private LocalDateTime nextTrainingDate;
 
     @Column(nullable = true)
+    @FutureOrPresent(message = "Exam date must be a from now on ")
     private LocalDate examDate;
  
     // We can clean up the duplicate tracking dates to keep your DB organized
@@ -118,6 +126,7 @@ public class Student
     Double advancePayment = 0.0;
     @Column(name = "remaining_payment")
     Double remainingPayment = 0.0;
+    
    public Double getTotalPaid()
     {
         return ((advancePayment != null) ? advancePayment : 0.0) + 

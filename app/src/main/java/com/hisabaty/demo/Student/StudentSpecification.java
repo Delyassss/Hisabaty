@@ -3,6 +3,8 @@ package com.hisabaty.demo.Student;
 import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 import java.util.ArrayList;
+
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.util.StringUtils;
 
@@ -32,10 +34,10 @@ public class StudentSpecification {
                         rules.add(reqbuilder.equal(root.get("typeOfLicense"), request.getTypeOfLicense()));
                     }
                     if (request.getRemainingPayment() != null && request.getAdvancePayment() != null) {
-                        rules.add(reqbuilder.equal(root.get("remainingPayment"), request.getRemainingPayment()));
+                        rules.add(reqbuilder.greaterThan(root.get("remainingPayment"), request.getRemainingPayment()));
                     }
                     if (request.getAdvancePayment() != null && request.getRemainingPayment() != null) {
-                        rules.add(reqbuilder.equal(root.get("advancePayment"), request.getAdvancePayment()));
+                        rules.add(reqbuilder.greaterThan(root.get("advancePayment"), request.getAdvancePayment()));
                     }
                     if (request.getAlreadyPassedCode() != null) {
                         rules.add(reqbuilder.equal(root.get("alreadyPassedCode"), request.getAlreadyPassedCode()));
@@ -58,9 +60,13 @@ public class StudentSpecification {
                     if (request.getRegistred() != null) {
                         rules.add(reqbuilder.equal(root.get("registered"), request.getRegistred()));
                     }
-                    if (request.getTotalPaid() != null) {
-                        rules.add(reqbuilder.equal(root.get("totalPaid"), request.getTotalPaid()));
+                    if (request.getTotalPaid() != null) 
+                    {
+                        Expression<Double> suM = reqbuilder.sum(root.get("advancePayment"), root.get("remainingPayment"));
+                        
+                        rules.add(reqbuilder.greaterThan(suM ,request.getTotalPaid()));
                     }
+
                     if (request.getRemainingDaysPerWeek() != null) {
                         rules.add(reqbuilder.equal(root.get("remainingDaysPerWeek"), request.getRemainingDaysPerWeek()));
                     }

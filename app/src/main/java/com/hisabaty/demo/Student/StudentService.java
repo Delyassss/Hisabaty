@@ -140,13 +140,14 @@ public class StudentService {
     
     
     /* ************************************************************************** */
-    /*                              DELETE REQUESTS                               */
+    /*                              PATCH REQUESTS                               */
     /* ************************************************************************** */
 
     public Student PatchStudent(Long studentId, Student_Patch_Request_DTO request)
     {
         Student std = studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFound(studentId));
-        setterStudents(std, null)
+        std = setterStudents(std, request);
+        return studentRepo.save(std);
     }
 
 
@@ -276,7 +277,10 @@ public class StudentService {
 
     public static Student setterStudents(Student std , Student_Request_DTO request)
     {
-        if (request == null || std == null)
+        if (request == null)
+            return std;
+
+        if (std == null)
             return null;
 
         if (StringUtils.hasText(request.getName()))
@@ -302,14 +306,29 @@ public class StudentService {
         
         if(request.getRemainingPayment() != null)
             std.setRemainingPayment(request.getRemainingPayment());
-        
+        if (request.getStatus() != null)
+            std.setStatus(request.getStatus());
+        if (request.getExamDate() != null)
+            std.setExamDate(request.getExamDate());
+        if (request.getLastTrainingDate() != null)
+            std.setLastTrainingDate(request.getLastTrainingDate());
+        if (request.getNextTrainingDate() != null)
+            std.setNextTrainingDate(request.getNextTrainingDate());
+        if (request.getCountdownDeadline() != null)
+            std.setCountdownDeadline(request.getCountdownDeadline());
+        if (request.getRegistred() != null)
+            std.setRegistered(request.getRegistred());
+        if (request.getRemainingDaysPerWeek() != null)
+            std.setRemainingDaysPerWeek(request.getRemainingDaysPerWeek());
+        if (request.getDaysAttended() != null)
+            std.setDaysAttended(null);
         // if(request.getSchoolId() != null) // ---> can shcools set their own student to schools?
         //     std.setSchoolId(request.getSchoolId());
 
         return std;
     }
 
-    
+
 
 
 

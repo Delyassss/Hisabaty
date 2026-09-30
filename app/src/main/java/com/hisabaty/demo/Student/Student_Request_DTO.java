@@ -1,16 +1,22 @@
 package com.hisabaty.demo.Student;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Data
-public class Student_Request_DTO
+public class Student_Request_DTO 
 {
 
 
@@ -39,22 +45,33 @@ public class Student_Request_DTO
     @NotNull(message = "Already passed code is required")
     private Boolean alreadyPassedCode;
 
-    private Double advancePayment = 0.0;
-    private Double remainingPayment = 0.0;
+    private Double advancePayment;
+    private Double remainingPayment;
 
-    private Status status = null;
+    private Status status ;
 
-    private AttendanceStatus attendanceStatus = null;
+    private AttendanceStatus attendanceStatus ;
 
-    private LocalDate createdAt =  null;
-    private LocalDate examDate = null;
-    private LocalDate lastTrainingDate = null;
-    private LocalDate nextTrainingDate = null;
-    private LocalDate countdownDeadline = null;
-    private Boolean registred = null;
-    private Double totalPaid = 0.0;
-    private Integer remainingDaysPerWeek = null;
-    private Integer daysAttended = null;
+    @FutureOrPresent(message = "Exam date must be a from now on ")
+    private LocalDate examDate ;
+    @PastOrPresent(message = "Last Training Date must from the the Past")
+    private LocalDateTime lastTrainingDate ;
+    @FutureOrPresent(message = "Next Training Date must be a from now on ")
+    private LocalDateTime nextTrainingDate ;
+    private LocalDate countdownDeadline ;
+    private Boolean registred ;
+    @Min(value = 1 , message = "Min is 1")
+    @Max(value = 7 , message = "Max i 7")
+    private Integer remainingDaysPerWeek ;
+    private Integer daysAttended ;
+    
+    @Column(updatable = false)
+    LocalDateTime createdAt;
+    Double totalPaid;
+
+
+
+
 
 
 }
