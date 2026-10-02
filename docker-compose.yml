@@ -18,6 +18,9 @@ services:
       - .env
     ports:
       - ${APP_PORT}:8080
+    networks:
+      - hisabaty_network
+    restart: always
 "
   db:
     container_name: hisabaty_db
