@@ -3,14 +3,16 @@ version: '3.8'
 volumes:
   db_data:
 
+
 networks:
   hisabaty_network:
     name: hisa_network
+    #bridge is the default network driver for docker (all containers are connected to the same network)
     driver: bridge
 
 services:
 
-  app :
+   hisabaty_app:
     container_name: hisabaty_app
     build : ./app                                               
     image: hisabaty_app
@@ -21,7 +23,7 @@ services:
     networks:
       - hisabaty_network
     restart: always
-"
+
   db:
     container_name: hisabaty_db
     image: postgres:15-alpine
@@ -46,5 +48,5 @@ services:
       - hisabaty_network
     restart: always
     depends_on:
-      - app
+      - hisabaty_app
     
