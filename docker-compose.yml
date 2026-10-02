@@ -10,6 +10,12 @@ networks:
 
 services:
 
+  app :
+    container_name: hisabaty_app
+    build : ./app                                               
+    image: hisabaty_app
+    env_file "
+"
   db:
     container_name: hisabaty_db
     image: postgres:15-alpine
