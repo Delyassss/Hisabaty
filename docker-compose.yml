@@ -14,7 +14,7 @@ services:
 
    hisabaty_app:
     container_name: hisabaty_app
-    build : ./app                                               
+    build : ./Dockerfile                                             
     image: hisabaty_app
     env_file:
       - .env
