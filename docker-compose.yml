@@ -2,6 +2,7 @@ version: '3.8'
 
 volumes:
   db_data:
+  redis_data:
 
 
 networks:
@@ -24,7 +25,7 @@ services:
       - hisabaty_network
     restart: always
 
-  db:
+  database_hisabaty:
     container_name: hisabaty_db
     image: postgres:15-alpine
     env_file:
@@ -36,6 +37,17 @@ services:
     networks:
       - hisabaty_network
     restart: always
+
+  redis : 
+    container_name: hisabaty_redis
+    image: redis:latest
+    ports:
+      - ${REDIS_PORT}:6379
+    networks:
+      - hisabaty_network
+    restart: always
+    volumes:
+      - redis_data:/data
 
     nginx: 
     image: nginx:latest
@@ -49,4 +61,7 @@ services:
     restart: always
     depends_on:
       - hisabaty_app
+
+
+
     
