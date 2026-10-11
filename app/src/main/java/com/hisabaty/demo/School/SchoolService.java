@@ -20,9 +20,10 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor // this is an annotation to inject the dependencies into the constructor  so no need for @Autowired
 public class SchoolService {
 
+    
     private final SchoolRepository schoolRepository;
     private final StudentRepository studentRepo;
-    private StudentService studentService;
+    private final StudentService studentService;
 
 
     /* ************************************************************************** */
@@ -107,13 +108,14 @@ public class SchoolService {
         School sch = schoolRepository.findById(schoolId).orElseThrow(() -> new SchoolNotFound(schoolId));
         String name = request.getName();
         String province = request.getProvince();
-                if (StringUtils.hasText(name) && StringUtils.hasText(province))
+
+        if (StringUtils.hasText(name) && StringUtils.hasText(province))
         {
             Optional<School> exist = schoolRepository.findByNameIgnoreCaseAndProvinceIgnoreCase(request.getName(), request.getProvince());
             if (exist.isPresent() && !exist.get().getId().equals(schoolId))
                 throw new ValueAlreadyExist("A school with this name and province already exists.");
+            sch = settersSchool(request, sch);
         }
-        sch = settersSchool(request, sch);
 
         return schoolRepository.save(sch);
     }
@@ -129,7 +131,7 @@ public class SchoolService {
 
 
     /* ************************************************************************** */
-    /*                              DELETE REQUESTS                                */
+    /*                              DELETE REQUESTS                               */
     /* ************************************************************************** */
 
     public Boolean DeleteSchool(Long school_id)

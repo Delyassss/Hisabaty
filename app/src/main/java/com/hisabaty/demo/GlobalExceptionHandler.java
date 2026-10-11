@@ -119,17 +119,17 @@ public class GlobalExceptionHandler
         errors.put("error", "Conflict occurred : " + rootMsg);
         errors.put("cause", causeMsg);
 
-        if (rootMsg.contains("email"))              
+        if (rootMsg.toLowerCase().contains("email"))              
         {
             causeMsg = "Email already exists";
             errors.put("Details", causeMsg);
         }
-        if (rootMsg.contains("phone"))
+        if (rootMsg.toLowerCase().contains("phone"))
         {
             causeMsg = "Phone number already exists";
             errors.put("Details", causeMsg);
         }
-        if (rootMsg.contains(" cin "))
+        if (rootMsg.toLowerCase().contains(" cin "))
         {
             causeMsg = "CIN already exists";
             errors.put("Details", causeMsg);
