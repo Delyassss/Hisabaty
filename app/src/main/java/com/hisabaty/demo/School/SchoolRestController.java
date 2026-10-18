@@ -20,7 +20,9 @@ import jakarta.validation.constraints.Positive;
 
 @RestController
 @RequestMapping({"/api/schools"})
-public class SchoolRestController {
+
+public class SchoolRestController
+{
     @Autowired
     private SchoolService schoolService;
     @Autowired

@@ -25,6 +25,7 @@ public class School_Response_DTO
     private Integer practiceDaysPerWeek;
     private List<String> licenseAvailable;
     private Integer studentCount;
+    private Integer instructorCount;
     private String studentCinPrefix;
 
 
@@ -43,6 +44,7 @@ public class School_Response_DTO
         responseDTO.setPracticeDaysPerWeek(sc.getPracticeDaysPerWeek());
         responseDTO.setLicenseAvailable(sc.getLicenseAvailable());
         responseDTO.setStudentCount(sc.getStudents().size());
+        responseDTO.setInstructorCount(sc.getInstructorCount() != null ? sc.getInstructorCount() : 0);
         responseDTO.setStudentCinPrefix(sc.getStudentCinPrefix());
         return responseDTO;
     }

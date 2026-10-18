@@ -18,6 +18,8 @@ import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor // this is an annotation to inject the dependencies into the constructor  so no need for @Autowired
+//When you put @RequiredArgsConstructor on your SchoolService,
+// Lombok automatically generates a hidden constructor for any field marked as final.
 public class SchoolService {
 
     

@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.hisabaty.demo.Instructor.Instructor;
 import com.hisabaty.demo.Student.Student;
 
 
@@ -45,6 +46,9 @@ public class    School
 
     @OneToMany(mappedBy = "school", fetch = FetchType.EAGER) // the mappedBy basically to point to the student 
     private List<Student> students  = new ArrayList<>(); // the OneToMany use fetch LAZY by default
+
+    @OneToMany(mappedBy = "school", fetch = FetchType.LAZY)
+    private List<Instructor> instructors = new ArrayList<>();
 
     @Column(nullable = false)
     @NotBlank(message = "Name is required")
@@ -88,6 +92,9 @@ public class    School
 
     @Column(name = "student_count")
     private Integer studentCount = 0;
+
+    @Column(name = "instructor_count")
+    private Integer instructorCount = 0;
     
     Integer  studentIndex = -1;
     String  studentCinPrefix;
