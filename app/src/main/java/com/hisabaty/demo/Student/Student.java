@@ -1,6 +1,10 @@
 package com.hisabaty.demo.Student;
 
+import com.hisabaty.demo.Payment.Payment;
 import com.hisabaty.demo.School.School;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -56,6 +60,9 @@ public class Student
     @ManyToOne(fetch = FetchType.LAZY) //fetch lazy is to not load the school when loading the student
     @JoinColumn(name = "school_entity", nullable = false) // Hibernate now can target the exact column name (school_entity)
     private School school = new School();
+
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
+    private List<Payment> payments = new ArrayList<>();
 
     @NotBlank(message = "Name is required")
     private String name;

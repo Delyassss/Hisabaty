@@ -231,7 +231,7 @@ public class InstructorService {
         }
         if (request.getSalary() != null) {
             instructor.setSalary(request.getSalary());
-        }
+        } 
         if (request.getHourlyRate() != null) {
             instructor.setHourlyRate(request.getHourlyRate());
         }

@@ -3,6 +3,7 @@ package com.hisabaty.demo;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.hisabaty.demo.Instructor.InstructorNotFound;
+import com.hisabaty.demo.Payment.PaymentNotFound;
 import com.hisabaty.demo.School.SchoolNotFound;
 import com.hisabaty.demo.Student.StudentAttendaceLimitException;
 import com.hisabaty.demo.Student.StudentNotFound;
@@ -61,6 +62,13 @@ public class GlobalExceptionHandler
     @ExceptionHandler(InstructorNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Map<String, String>> handleInstructorNotFound(InstructorNotFound ex)
+    {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", ex.getMessage()));
+    }
+
+    @ExceptionHandler(PaymentNotFound.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Map<String, String>> handlePaymentNotFound(PaymentNotFound ex)
     {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", ex.getMessage()));
     }
