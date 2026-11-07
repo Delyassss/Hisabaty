@@ -26,6 +26,7 @@ public class School_Response_DTO
     private List<String> licenseAvailable;
     private Integer studentCount;
     private Integer instructorCount;
+    private Integer vehicleCount;
     private String studentCinPrefix;
 
 
@@ -45,6 +46,7 @@ public class School_Response_DTO
         responseDTO.setLicenseAvailable(sc.getLicenseAvailable());
         responseDTO.setStudentCount(sc.getStudents().size());
         responseDTO.setInstructorCount(sc.getInstructorCount() != null ? sc.getInstructorCount() : 0);
+        responseDTO.setVehicleCount(sc.getVehicleCount() != null ? sc.getVehicleCount() : 0);
         responseDTO.setStudentCinPrefix(sc.getStudentCinPrefix());
         return responseDTO;
     }

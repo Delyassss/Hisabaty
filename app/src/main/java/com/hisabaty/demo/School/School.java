@@ -16,6 +16,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.hisabaty.demo.Instructor.Instructor;
 import com.hisabaty.demo.Payment.Payment;
 import com.hisabaty.demo.Student.Student;
+import com.hisabaty.demo.Vehicle.Vehicle;
 
 
 @Entity
@@ -53,6 +54,9 @@ public class    School
 
     @OneToMany(mappedBy = "school", fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "school", fetch = FetchType.LAZY)
+    private List<Vehicle> vehicles = new ArrayList<>();
 
     @Column(nullable = false)
     @NotBlank(message = "Name is required")
@@ -99,6 +103,9 @@ public class    School
 
     @Column(name = "instructor_count")
     private Integer instructorCount = 0;
+
+    @Column(name = "vehicle_count")
+    private Integer vehicleCount = 0;
     
     Integer  studentIndex = -1;
     String  studentCinPrefix;
